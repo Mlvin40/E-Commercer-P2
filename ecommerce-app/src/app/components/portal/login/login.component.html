@@ -1,0 +1,83 @@
+<div class="container my-5 py-5">
+  <div class="row d-flex justify-content-center align-items-center vh-100">
+    <div class="col-md-6 col-lg-5">
+      <div class="card p-5 shadow-lg rounded-4" style="background: rgba(255,255,255,0.95);">
+        <h2 class="text-center mb-4 fw-bold text-primary">Inicio de Sesión</h2>
+
+        <form #loginForm="ngForm" (ngSubmit)="onLogin(loginForm)" novalidate>
+          <!-- Correo Electrónico -->
+          <div class="form-outline mb-3">
+            <label for="correo" class="form-label">Correo Electrónico</label>
+            <input
+              type="email"
+              id="correo"
+              name="correo"
+              class="form-control form-control-lg"
+              placeholder="ejemplo@mail.com"
+              [(ngModel)]="correo"
+              required
+              email
+              autocomplete="email"
+            />
+          </div>
+
+          <!-- Contraseña -->
+          <div class="form-outline mb-3">
+            <label for="contrasena" class="form-label">Contraseña</label>
+            <input
+              [type]="mostrarContrasena ? 'text' : 'password'"
+              id="contrasena"
+              name="contrasena"
+              class="form-control form-control-lg"
+              placeholder="*****"
+              [(ngModel)]="contrasena"
+              required
+              minlength="4"
+              autocomplete="current-password"
+            />
+          </div>
+
+          <!-- Mostrar contraseña -->
+          <div class="form-check mb-3">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="mostrarContrasena"
+              [(ngModel)]="mostrarContrasena"
+              [ngModelOptions]="{ standalone: true }"
+            />
+            <label class="form-check-label" for="mostrarContrasena">
+              Mostrar contraseña
+            </label>
+          </div>
+
+          <!-- Estado: cargando / error -->
+          <div *ngIf="cargando" class="text-center text-secondary mb-2" aria-live="polite">
+            Iniciando sesión…
+          </div>
+          <div *ngIf="error" class="alert alert-danger mb-3" role="alert">
+            {{ error }}
+          </div>
+
+          <!-- Botón de login -->
+          <div class="d-grid mb-3">
+            <button
+              type="submit"
+              class="btn btn-primary btn-lg"
+              [disabled]="loginForm.invalid || cargando"
+            >
+              {{ cargando ? 'Entrando…' : 'Iniciar Sesión' }}
+            </button>
+          </div>
+
+          <p class="text-center mb-0">
+            ¿No tienes una cuenta?
+            <a (click)="irRegistro()" class="link-primary fw-bold" style="cursor: pointer;">
+              Registrarse
+            </a>
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

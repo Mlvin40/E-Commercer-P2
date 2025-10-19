@@ -1,0 +1,85 @@
+<div class="portal-container d-flex justify-content-center align-items-center vh-100"
+     style="background: linear-gradient(to right, #ff7e5f, #feb47b);">
+  <div class="card p-5 shadow-lg rounded-4" style="max-width: 500px; width: 100%; background: rgba(255,255,255,0.95);">
+    <h2 class="text-center mb-4 fw-bold text-primary">Crear Cuenta</h2>
+
+    <!-- Feedback global opcional -->
+    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+    <div *ngIf="exito" class="alert alert-success">{{ exito }}</div>
+
+    <form (ngSubmit)="onRegister(registroForm)" #registroForm="ngForm" novalidate>
+      <!-- Nombre -->
+      <div class="form-outline mb-3">
+        <label for="nombre" class="form-label">Nombre Completo:</label>
+        <input type="text"
+               id="nombre"
+               name="nombre"
+               [(ngModel)]="registro.nombre"
+               class="form-control form-control-lg"
+               placeholder="Ej. Juan Pérez"
+               required
+               #nombreCtrl="ngModel">
+        <div *ngIf="nombreCtrl.invalid && nombreCtrl.touched" class="text-danger small mt-1">
+          El nombre es obligatorio.
+        </div>
+      </div>
+
+      <!-- Correo -->
+      <div class="form-outline mb-3">
+        <label for="correo" class="form-label">Correo Electrónico:</label>
+        <input type="email"
+               id="correo"
+               name="correo"
+               [(ngModel)]="registro.correo"
+               class="form-control form-control-lg"
+               placeholder="ejemplo@mail.com"
+               required
+               email
+               #correoCtrl="ngModel">
+        <div *ngIf="correoCtrl.invalid && correoCtrl.touched" class="text-danger small mt-1">
+          Ingresa un correo válido.
+        </div>
+      </div>
+
+      <!-- Contraseña -->
+      <div class="form-outline mb-3">
+        <label for="password" class="form-label">Contraseña:</label>
+        <input [type]="mostrarContrasena ? 'text' : 'password'"
+               id="password"
+               name="password"
+               [(ngModel)]="registro.password"
+               class="form-control form-control-lg"
+               placeholder="*****"
+               required
+               minlength="6"
+               #passCtrl="ngModel">
+        <div *ngIf="passCtrl.invalid && passCtrl.touched" class="text-danger small mt-1">
+          La contraseña es obligatoria (mínimo 6 caracteres).
+        </div>
+      </div>
+
+      <!-- Mostrar Contraseña -->
+      <div class="form-check mb-3">
+        <input type="checkbox"
+               [(ngModel)]="mostrarContrasena"
+               [ngModelOptions]="{standalone: true}"
+               class="form-check-input"
+               id="mostrarContrasena">
+        <label class="form-check-label" for="mostrarContrasena">Mostrar contraseña</label>
+      </div>
+
+      <!-- Botón -->
+      <div class="d-grid">
+        <button type="submit"
+                class="btn btn-primary btn-lg"
+                [disabled]="registroForm.invalid || cargando">
+          {{ cargando ? 'Registrando…' : 'Registrarse' }}
+        </button>
+      </div>
+
+      <p class="text-center mt-3 mb-0">¿Ya tienes una cuenta?
+        <a routerLink="/login" class="link-primary fw-bold">Iniciar Sesión</a>
+      </p>
+    </form>
+  </div>
+</div>

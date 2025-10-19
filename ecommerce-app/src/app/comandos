@@ -1,0 +1,2 @@
+ng g c nombre --type=component
+ng g s nombre --type=service
