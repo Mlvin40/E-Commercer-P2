@@ -1,0 +1,40 @@
+<div class="card p-3">
+  <h5 class="mb-3">Revisiones pendientes</h5>
+  <div *ngIf="cargando">Cargando…</div>
+  <div *ngIf="error" class="text-danger">{{ error }}</div>
+  <table *ngIf="!cargando && items.length" class="table align-middle">
+    <thead>
+      <tr>
+        <th>Producto</th>
+        <th>Vendedor</th>
+        <th>Categoria</th>
+        <th>Creado</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let it of items">
+        <td>
+          <div class="d-flex align-items-center gap-2">
+            <img *ngIf="it.imagenUrl" [src]="it.imagenUrl" class="rounded" style="width:48px;height:48px;object-fit:cover">
+            <div>
+              <div class="fw-semibold">{{ it.nombre }}</div>
+              <div class="text-muted small">{{ it.estado }}</div>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div>{{ it.vendedorNombre }}</div>
+          <div class="text-muted small">{{ it.vendedorCorreo }}</div>
+        </td>
+        <td>{{ it.categoria }}</td>
+        <td>{{ it.creadoEn | date:'short' }}</td>
+        <td class="text-end">
+          <button class="btn btn-sm btn-success me-2" (click)="aprobar(it.productoId)">Aprobar</button>
+          <button class="btn btn-sm btn-danger" (click)="rechazar(it.productoId)">Rechazar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="!cargando && !items.length" class="text-muted">No hay pendientes.</div>
+</div>

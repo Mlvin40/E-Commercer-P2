@@ -33,7 +33,8 @@ public class SecurityConfig {
                         // catálogo público, etc.
                         .requestMatchers("/api/public/**").permitAll()
 
-                        .requestMatchers(HttpMethod.GET, "/files/**").permitAll() // servir imágenes
+                        .requestMatchers(HttpMethod.GET, "/files/**").permitAll()        // ver imágenes
+                        .requestMatchers(HttpMethod.POST, "/api/files/upload").authenticated() // subir requiere login
                         // zonas por rol
                         .requestMatchers("/api/comun/**").hasRole("COMUN")
                         .requestMatchers("/api/moderador/**").hasAnyRole("MODERADOR","ADMIN")
