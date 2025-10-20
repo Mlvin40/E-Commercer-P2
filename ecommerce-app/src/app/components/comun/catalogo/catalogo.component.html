@@ -25,12 +25,19 @@
       <img *ngIf="p.imagenUrl" [src]="p.imagenUrl" class="card-img-top" style="height:180px;object-fit:cover">
       <div class="card-body">
         <h6 class="card-title mb-1">{{ p.nombre }}</h6>
-        <div class="text-muted small mb-1">{{ p.categoria }} · Stock: {{ p.stock }}</div>
-        <div class="fw-bold mb-2">Q {{ p.precio | number:'1.2-2' }}</div>
-        <div class="small text-secondary">
-          por {{ p.vendedorNombre }}
-          <span class="ms-1" title="{{ p.vendedorCorreo }}">📧</span>
+
+        <div class="text-muted small mb-1">
+          {{ p.categoria }} · Stock: {{ p.stock }}
         </div>
+
+        <div class="fw-bold mb-2">Q {{ p.precio | number:'1.2-2' }}</div>
+
+        <div class="small text-secondary mb-2" *ngIf="p.vendedorNombre">
+          por {{ p.vendedorNombre }}
+          <span class="ms-1" *ngIf="p.vendedorCorreo" [title]="p.vendedorCorreo">📧</span>
+        </div>
+
+        <button class="btn btn-sm btn-primary" (click)="addToCart(p.id)">Agregar al carrito</button>
       </div>
     </div>
   </div>
@@ -41,8 +48,8 @@
     <li class="page-item" [class.disabled]="page===0">
       <button class="page-link" (click)="load(page-1)">«</button>
     </li>
-    <li class="page-item" *ngFor="let i of [].constructor(totalPages); let idx = index" [class.active]="idx===page">
-      <button class="page-link" (click)="load(idx)">{{ idx+1 }}</button>
+    <li class="page-item" *ngFor="let i of pages" [class.active]="i===page">
+      <button class="page-link" (click)="load(i)">{{ i + 1 }}</button>
     </li>
     <li class="page-item" [class.disabled]="page===totalPages-1">
       <button class="page-link" (click)="load(page+1)">»</button>

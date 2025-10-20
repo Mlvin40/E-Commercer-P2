@@ -1,1 +1,20 @@
-<p>pedidos works!</p>
+<!-- pedidos.component.html -->
+<div class="card p-3">
+  <h5 class="mb-3">Mis pedidos</h5>
+  <div *ngIf="cargando">Cargando…</div>
+  <div *ngIf="error" class="text-danger">{{ error }}</div>
+
+  <table class="table" *ngIf="!cargando && items.length">
+    <thead><tr><th>#</th><th>Fecha</th><th>Entrega estimada</th><th>Estado</th><th>Total</th></tr></thead>
+    <tbody>
+      <tr *ngFor="let p of items">
+        <td>{{ p.id }}</td>
+        <td>{{ p.fecha }}</td>
+        <td>{{ p.fechaEstimadaEntrega }}</td>
+        <td>{{ p.estado }}</td>
+        <td>Q {{ p.total | number:'1.2-2' }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="!cargando && !items.length" class="text-muted">Sin pedidos.</div>
+</div>

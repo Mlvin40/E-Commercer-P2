@@ -1,1 +1,70 @@
-<p>carrito works!</p>
+<div class="card p-3">
+  <h5 class="mb-3">Tu carrito</h5>
+
+  <div *ngIf="!hasItems" class="text-muted">Sin productos.</div>
+
+  <table *ngIf="hasItems" class="table align-middle">
+    <thead>
+      <tr><th>Producto</th><th>Precio</th><th>Cantidad</th><th>Subtotal</th><th></th></tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let it of items">
+        <td>
+          <div class="d-flex align-items-center gap-2">
+            <img [src]="it.imagenUrl" style="width:48px;height:48px;object-fit:cover" />
+            <div>{{ it.nombre }}</div>
+          </div>
+        </td>
+        <td>Q {{ it.precio | number:'1.2-2' }}</td>
+        <td>
+          <input type="number" class="form-control" style="width:90px"
+                 [min]="1" [max]="it.stockDisponible"
+                 [ngModel]="it.cantidad"
+                 (ngModelChange)="cambiarCantidad(it.productoId, $event)" />
+        </td>
+        <td>Q {{ (it.precio * it.cantidad) | number:'1.2-2' }}</td>
+        <td class="text-end">
+          <button class="btn btn-sm btn-outline-danger" (click)="quitar(it.productoId)">Quitar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="d-flex justify-content-between mt-3" *ngIf="hasItems">
+    <button class="btn btn-outline-secondary" (click)="vaciar()">Vaciar</button>
+    <div class="fw-bold fs-5">Total: Q {{ subtotal | number:'1.2-2' }}</div>
+  </div>
+</div>
+
+<div class="card p-3 mt-3" *ngIf="hasItems">
+  <h6 class="mb-2">Pago</h6>
+
+  <div class="form-check form-switch mb-2">
+    <input class="form-check-input" type="checkbox" [(ngModel)]="usarGuardada" id="sw">
+    <label class="form-check-label" for="sw">Usar tarjeta guardada</label>
+  </div>
+
+  <div *ngIf="usarGuardada">
+    <select class="form-select" [(ngModel)]="savedCardId">
+      <option [ngValue]="undefined">Selecciona</option>
+      <option *ngFor="let t of tarjetas" [ngValue]="t.id">
+        {{ t.marca }} •••• {{ t.last4 }} — {{ t.titular }}
+      </option>
+    </select>
+  </div>
+
+  <div *ngIf="!usarGuardada" class="row g-2">
+    <div class="col-sm-6"><input class="form-control" placeholder="Número" [(ngModel)]="numero"></div>
+    <div class="col-sm-2"><input class="form-control" placeholder="MM" [(ngModel)]="expMes"></div>
+    <div class="col-sm-2"><input class="form-control" placeholder="AA" [(ngModel)]="expAnio"></div>
+    <div class="col-sm-6"><input class="form-control" placeholder="Titular" [(ngModel)]="titular"></div>
+    <div class="col-12 form-check mt-2">
+      <input type="checkbox" class="form-check-input" [(ngModel)]="guardar" id="g">
+      <label class="form-check-label" for="g">Guardar tarjeta</label>
+    </div>
+  </div>
+
+  <div class="mt-3 d-flex justify-content-end">
+    <button class="btn btn-primary" (click)="pagar()">Pagar</button>
+  </div>
+</div>
