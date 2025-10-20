@@ -10,5 +10,7 @@ public record ProductoCardView(
         Integer stock,
         String categoria,
         String vendedorNombre,
-        String vendedorCorreo
+        String vendedorCorreo,
+        Double avgRating,
+        Long ratingsCount
 ) {}

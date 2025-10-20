@@ -11,5 +11,7 @@ public record ProductoDetalleView(
         Integer stock,
         String estado,
         String categoria,
-        String vendedorNombre
+        String vendedorNombre,
+        Double avgRating,
+        Long ratingsCount
 ) {}

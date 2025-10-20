@@ -1,5 +1,6 @@
 package ecommerce_api.ecommerce_api.service;
 
+import ecommerce_api.ecommerce_api.dto.CalificacionView;
 import ecommerce_api.ecommerce_api.dto.RatingCreateDto;
 import ecommerce_api.ecommerce_api.dto.RatingSummaryDto;
 import ecommerce_api.ecommerce_api.model.Calificacion;
@@ -11,6 +12,8 @@ import ecommerce_api.ecommerce_api.repo.ProductoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service @RequiredArgsConstructor
 public class RatingService {
@@ -48,4 +51,11 @@ public class RatingService {
                 calificaciones.countForProduct(productoId)
         );
     }
+
+    @Transactional(readOnly = true)
+    public List<CalificacionView> listarComentarios(Long productoId) {
+        return calificaciones.findViewsByProductoId(productoId);
+    }
+
+
 }

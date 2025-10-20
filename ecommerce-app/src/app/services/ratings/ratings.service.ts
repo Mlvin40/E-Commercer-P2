@@ -12,5 +12,9 @@ export interface RatingCreate {
 export class RatingsService {
   private base = `${environment.apiUrl}/comun/ratings`;
   constructor(private http: HttpClient) {}
-  crear(body: RatingCreate) { return this.http.post(this.base, body, { responseType: 'text' as 'json' }); }
+
+  crear(body: RatingCreate) {
+    return this.http.post<void>(this.base, body);
+  }
+
 }

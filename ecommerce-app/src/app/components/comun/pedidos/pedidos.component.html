@@ -1,20 +1,77 @@
-<!-- pedidos.component.html -->
 <div class="card p-3">
   <h5 class="mb-3">Mis pedidos</h5>
   <div *ngIf="cargando">Cargando…</div>
   <div *ngIf="error" class="text-danger">{{ error }}</div>
 
   <table class="table" *ngIf="!cargando && items.length">
-    <thead><tr><th>#</th><th>Fecha</th><th>Entrega estimada</th><th>Estado</th><th>Total</th></tr></thead>
+    <thead>
+      <tr><th>#</th><th>Fecha</th><th>Entrega estimada</th><th>Estado</th><th>Total</th><th></th></tr>
+    </thead>
     <tbody>
-      <tr *ngFor="let p of items">
-        <td>{{ p.id }}</td>
-        <td>{{ p.fecha }}</td>
-        <td>{{ p.fechaEstimadaEntrega }}</td>
-        <td>{{ p.estado }}</td>
-        <td>Q {{ p.total | number:'1.2-2' }}</td>
-      </tr>
+      <!-- envuelve ambas filas en el mismo *ngFor -->
+      <ng-container *ngFor="let p of items">
+        <tr>
+          <td>{{ p.id }}</td>
+          <td>{{ p.fecha }}</td>
+          <td>{{ p.fechaEstimadaEntrega }}</td>
+          <td>{{ p.estado }}</td>
+          <td>Q {{ p.total | number:'1.2-2' }}</td>
+          <td class="text-end">
+            <button class="btn btn-sm btn-outline-primary" (click)="toggle(p.id)">
+              {{ expanded===p.id ? 'Ocultar' : 'Ver ítems' }}
+            </button>
+          </td>
+        </tr>
+
+        <!-- detalle del mismo pedido p -->
+        <tr *ngIf="expanded===p.id">
+          <td colspan="6">
+            <div *ngIf="!detalle[p.id]">Cargando ítems…</div>
+
+            <div *ngIf="detalle[p.id]?.length">
+              <div class="row g-3">
+                <div class="col-12 col-md-6" *ngFor="let it of detalle[p.id]">
+                  <div class="card h-100">
+                    <div class="card-body">
+                      <div class="d-flex gap-2 align-items-center mb-2">
+                        <img [src]="it.imagenUrl" style="width:56px;height:56px;object-fit:cover" class="rounded">
+                        <div>
+                          <div class="fw-semibold">{{ it.nombre }}</div>
+                          <div class="text-muted small">
+                            Cant: {{ it.cantidad }} · Q {{ it.precioUnitario | number:'1.2-2' }}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div *ngIf="it.yaCalificado" class="badge text-bg-success">Ya calificado</div>
+
+                      <div *ngIf="!it.yaCalificado" class="row g-2 align-items-center">
+                        <div class="col-auto">
+                          <input type="number" min="1" max="5" class="form-control"
+                                 [(ngModel)]="estrellas[it.productoId]">
+                        </div>
+                        <div class="col">
+                          <input class="form-control" placeholder="Comentario (opcional)"
+                                 [(ngModel)]="comentario[it.productoId]">
+                        </div>
+                        <div class="col-auto">
+                          <button class="btn btn-primary" [disabled]="enviando"
+                                  (click)="calificar(it.productoId)">Calificar</button>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="detalle[p.id] && !detalle[p.id].length" class="text-muted">Sin ítems.</div>
+          </td>
+        </tr>
+      </ng-container>
     </tbody>
   </table>
+
   <div *ngIf="!cargando && !items.length" class="text-muted">Sin pedidos.</div>
 </div>

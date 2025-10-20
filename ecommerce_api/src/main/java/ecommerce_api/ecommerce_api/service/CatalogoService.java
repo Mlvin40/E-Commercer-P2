@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CatalogoService {
     private final ProductoRepository productos;
+    private final RatingService ratings;
 
     @Transactional(readOnly = true)
     public Page<ProductoCardView> listar(Long meId, String categoria, String q, Pageable pageable) {
@@ -30,31 +31,26 @@ public class CatalogoService {
                 page = productos.findByEstadoPublicacionAndCategoriaAndVendedor_IdNot(
                         APROBADO, categoria.trim().toUpperCase(), meId, pageable);
             } else {
-                page = productos.findByEstadoPublicacionAndVendedor_IdNot(
-                        APROBADO, meId, pageable);
+                page = productos.findByEstadoPublicacionAndVendedor_IdNot(APROBADO, meId, pageable);
             }
         } else {
             if (q != null && !q.isBlank()) {
-                page = productos.findByEstadoPublicacionAndNombreContainingIgnoreCase(
-                        APROBADO, q.trim(), pageable);
+                page = productos.findByEstadoPublicacionAndNombreContainingIgnoreCase(APROBADO, q.trim(), pageable);
             } else if (categoria != null && !categoria.isBlank()) {
-                page = productos.findByEstadoPublicacionAndCategoria(
-                        APROBADO, categoria.trim().toUpperCase(), pageable);
+                page = productos.findByEstadoPublicacionAndCategoria(APROBADO, categoria.trim().toUpperCase(), pageable);
             } else {
                 page = productos.findByEstadoPublicacion(APROBADO, pageable);
             }
         }
 
-        return page.map(p -> new ProductoCardView(
-                p.getId(),
-                p.getNombre(),
-                p.getImagenUrl(),
-                p.getPrecio(),
-                p.getStock(),
-                p.getCategoria(),
-                p.getVendedor().getNombre(),   // <- nuevo
-                p.getVendedor().getCorreo()    // <- nuevo
-        ));
-
+        return page.map(p -> {
+            var s = ratings.resumen(p.getId());
+            return new ProductoCardView(
+                    p.getId(), p.getNombre(), p.getImagenUrl(), p.getPrecio(), p.getStock(), p.getCategoria(),
+                    p.getVendedor().getNombre(), p.getVendedor().getCorreo(),
+                    s.avg(), s.count()
+            );
+        });
     }
 }
+

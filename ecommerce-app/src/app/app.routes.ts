@@ -31,7 +31,7 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     data: { role: 'COMUN' },
     children: [
-      { path: '', redirectTo: 'vender', pathMatch: 'full' },
+      { path: '', redirectTo: 'catalogo', pathMatch: 'full' },
       { path: 'vender', component: ProductoFormComponent },
       { path: 'catalogo', component: CatalogoComponent },
       { path: 'mis-productos', component: MisProductosComponent },

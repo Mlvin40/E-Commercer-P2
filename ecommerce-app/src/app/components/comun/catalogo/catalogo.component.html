@@ -26,10 +26,16 @@
       <div class="card-body">
         <h6 class="card-title mb-1">{{ p.nombre }}</h6>
 
-        <div class="text-muted small mb-1">
-          {{ p.categoria }} · Stock: {{ p.stock }}
+        <!-- rating resumen -->
+        <div class="small mb-1" *ngIf="p.ratingsCount > 0" title="{{ p.avgRating | number:'1.1-1' }} / 5 ({{ p.ratingsCount }})">
+          <span class="me-2">{{ starsLine(p.avgRating) }}</span>
+          <span class="text-muted">
+            {{ p.avgRating | number:'1.1-1' }} ({{ p.ratingsCount }})
+          </span>
         </div>
+        <div class="small text-muted mb-1" *ngIf="p.ratingsCount === 0">Sin calificaciones</div>
 
+        <div class="text-muted small mb-1">{{ p.categoria }} · Stock: {{ p.stock }}</div>
         <div class="fw-bold mb-2">Q {{ p.precio | number:'1.2-2' }}</div>
 
         <div class="small text-secondary mb-2" *ngIf="p.vendedorNombre">
@@ -37,7 +43,34 @@
           <span class="ms-1" *ngIf="p.vendedorCorreo" [title]="p.vendedorCorreo">📧</span>
         </div>
 
-        <button class="btn btn-sm btn-primary" (click)="addToCart(p.id)">Agregar al carrito</button>
+        <div class="d-flex gap-2">
+          <button class="btn btn-sm btn-primary" (click)="addToCart(p.id)">Agregar al carrito</button>
+          <button class="btn btn-sm btn-outline-secondary" (click)="toggleComentarios(p.id)">
+            {{ expandedComments[p.id] ? 'Ocultar' : 'Ver' }} comentarios
+          </button>
+        </div>
+
+        <!-- panel de comentarios -->
+        <div class="mt-2" *ngIf="expandedComments[p.id]">
+          <div *ngIf="cargandoComentarios[p.id]" class="text-muted small">Cargando comentarios…</div>
+          <div *ngIf="!cargandoComentarios[p.id] && (comentarios[p.id]?.length || 0) === 0" class="text-muted small">
+            Sin comentarios.
+          </div>
+          <div class="list-group list-group-flush small" *ngIf="comentarios[p.id]?.length">
+            <div class="list-group-item" *ngFor="let c of comentarios[p.id] | slice:0:3">
+              <div class="d-flex justify-content-between">
+                <strong>{{ c.usuario }}</strong>
+                <span title="{{ c.estrellas }} / 5">{{ '★'.repeat(c.estrellas) + '☆'.repeat(5-c.estrellas) }}</span>
+              </div>
+              <div class="text-muted">{{ c.fecha | date:'short' }}</div>
+              <div>{{ c.comentario }}</div>
+            </div>
+            <div class="text-end mt-1" *ngIf="(comentarios[p.id]?.length || 0) > 3">
+              <span class="text-muted">Mostrando 3 de {{ comentarios[p.id]?.length }}</span>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>

@@ -7,4 +7,6 @@ export interface ProductoCard {
   categoria: string;
   vendedorNombre?: string;
   vendedorCorreo?: string;
+  avgRating: number;    
+  ratingsCount: number; 
 }

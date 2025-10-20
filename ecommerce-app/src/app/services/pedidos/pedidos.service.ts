@@ -10,9 +10,20 @@ export interface PedidoListItem {
   total: number;
 }
 
+export interface PedidoItemParaRating {
+  productoId: number;
+  nombre: string;
+  imagenUrl: string;
+  cantidad: number;
+  precioUnitario: number;
+  yaCalificado: boolean;
+}
+
 @Injectable({ providedIn: 'root' })
 export class PedidosService {
   private base = `${environment.apiUrl}/comun/pedidos`;
   constructor(private http: HttpClient) {}
+
   listar() { return this.http.get<PedidoListItem[]>(this.base); }
+  detalle(id: number) { return this.http.get<PedidoItemParaRating[]>(`${this.base}/${id}`); }
 }
