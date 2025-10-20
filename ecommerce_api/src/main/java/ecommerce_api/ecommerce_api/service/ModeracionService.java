@@ -22,6 +22,7 @@ public class ModeracionService {
     private final ProductoRevisionRepository revisiones;
     private final UsuarioRepository usuarios;
 
+    @Transactional(readOnly = true)
     public List<ProductoPendienteView> listarPendientes() {
         return revisiones.findByEstadoOrderByCreadoEnAsc("PENDIENTE")
                 .stream()
@@ -42,51 +43,53 @@ public class ModeracionService {
     public void aprobar(Long moderadorId, Long productoId) {
         Usuario mod = usuarios.findById(moderadorId)
                 .orElseThrow(() -> new IllegalArgumentException("Moderador no encontrado"));
-        if (!"MODERADOR".equals(mod.getRol().name())) {
+
+        // Permite MODERADOR o ADMIN
+        if (!("MODERADOR".equals(mod.getRol().name()) || "ADMIN".equals(mod.getRol().name()))) {
             throw new IllegalStateException("No autorizado");
         }
 
         Producto p = productos.findById(productoId)
                 .orElseThrow(() -> new IllegalArgumentException("Producto no existe"));
 
-        // cierra revisión pendiente (si existe)
-        revisiones.findByEstadoOrderByCreadoEnAsc("PENDIENTE").stream()
-                .filter(r -> r.getProducto().getId().equals(productoId))
-                .findFirst()
-                .ifPresent(r -> {
-                    r.setEstado("APROBADO");
-                    r.setModerador(mod);
-                    r.setResueltoEn(Instant.now());
-                    revisiones.save(r);
-                });
+        // Cierra la revisión PENDIENTE de ese producto
+        ProductoRevision rev = revisiones
+                .findFirstByProducto_IdAndEstadoOrderByCreadoEnAsc(productoId, "PENDIENTE")
+                .orElseThrow(() -> new IllegalArgumentException("No hay revisión pendiente para este producto."));
 
+        rev.setEstado("APROBADO");
+        rev.setModerador(mod);
+        rev.setResueltoEn(Instant.now());
+        revisiones.save(rev);
+
+        // Actualiza estado_publicacion en productos
         p.setEstadoPublicacion("APROBADO");
         productos.save(p);
     }
-
     @Transactional
     public void rechazar(Long moderadorId, Long productoId, String comentario) {
         Usuario mod = usuarios.findById(moderadorId)
                 .orElseThrow(() -> new IllegalArgumentException("Moderador no encontrado"));
-        if (!"MODERADOR".equals(mod.getRol().name())) {
+
+        if (!("MODERADOR".equals(mod.getRol().name()) || "ADMIN".equals(mod.getRol().name()))) {
             throw new IllegalStateException("No autorizado");
         }
 
         Producto p = productos.findById(productoId)
                 .orElseThrow(() -> new IllegalArgumentException("Producto no existe"));
 
-        revisiones.findByEstadoOrderByCreadoEnAsc("PENDIENTE").stream()
-                .filter(r -> r.getProducto().getId().equals(productoId))
-                .findFirst()
-                .ifPresent(r -> {
-                    r.setEstado("RECHAZADO");
-                    r.setModerador(mod);
-                    r.setComentario(comentario);
-                    r.setResueltoEn(Instant.now());
-                    revisiones.save(r);
-                });
+        ProductoRevision rev = revisiones
+                .findFirstByProducto_IdAndEstadoOrderByCreadoEnAsc(productoId, "PENDIENTE")
+                .orElseThrow(() -> new IllegalArgumentException("No hay revisión pendiente para este producto."));
+
+        rev.setEstado("RECHAZADO");
+        rev.setModerador(mod);
+        rev.setComentario(comentario);
+        rev.setResueltoEn(Instant.now());
+        revisiones.save(rev);
 
         p.setEstadoPublicacion("RECHAZADO");
         productos.save(p);
     }
+
 }

@@ -1,5 +1,6 @@
 package ecommerce_api.ecommerce_api.service;
 
+import ecommerce_api.ecommerce_api.dto.ProductoMineView;
 import ecommerce_api.ecommerce_api.dto.ProductoUpsertDto;
 import ecommerce_api.ecommerce_api.model.Producto;
 import ecommerce_api.ecommerce_api.model.ProductoRevision;
@@ -11,7 +12,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.stream.Collectors;
+
 import java.time.Instant;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -69,4 +73,78 @@ public class ProductoService {
 
         return p;
     }
+
+    @Transactional
+    public void actualizar(Long vendedorId, Long productoId, ProductoUpsertDto dto) {
+        var p = productos.findById(productoId)
+                .orElseThrow(() -> new IllegalArgumentException("No existe el producto"));
+
+        if (!p.getVendedor().getId().equals(vendedorId)) {
+            throw new IllegalArgumentException("No puedes modificar este producto");
+        }
+
+        // Validaciones básicas reutilizando tu lógica
+        if (dto.nombre() == null || dto.nombre().isBlank())
+            throw new IllegalArgumentException("El nombre es obligatorio");
+        if (dto.precio() == null || dto.precio().doubleValue() <= 0)
+            throw new IllegalArgumentException("El precio debe ser > 0");
+        if (dto.stock() == null || dto.stock() < 1)
+            throw new IllegalArgumentException("El stock mínimo es 1");
+        if (dto.estado() == null || dto.categoria() == null)
+            throw new IllegalArgumentException("Estado y categoría son obligatorios");
+
+        p.setNombre(dto.nombre().trim());
+        p.setDescripcion(dto.descripcion());
+        p.setImagenUrl(dto.imagenUrl());
+        p.setPrecio(dto.precio());
+        p.setStock(dto.stock());
+        p.setEstado(dto.estado().trim().toUpperCase());
+        p.setCategoria(dto.categoria().trim().toUpperCase());
+
+        // cada actualización entra a revisión:
+        p.setEstadoPublicacion("PENDIENTE");
+        productos.save(p);
+
+        // crear nueva fila de revisión pendiente si no existe una pendiente
+        if (!revisiones.existsByProductoAndEstado(p, "PENDIENTE")) {
+            var rev = ProductoRevision.builder()
+                    .producto(p)
+                    .solicitadoPor(p.getVendedor())
+                    .estado("PENDIENTE")
+                    .creadoEn(Instant.now())
+                    .build();
+            revisiones.save(rev);
+        }
+    }
+
+    @Transactional
+    public void eliminar(Long vendedorId, Long productoId) {
+        var p = productos.findById(productoId)
+                .orElseThrow(() -> new IllegalArgumentException("No existe el producto"));
+        if (!p.getVendedor().getId().equals(vendedorId)) {
+            throw new IllegalArgumentException("No puedes eliminar este producto");
+        }
+        productos.delete(p); // on delete cascade eliminará revisiones
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductoMineView> listarMisProductos(Long vendedorId) {
+        return productos.findByVendedor_IdOrderByFechaPublicacionDesc(vendedorId)
+                .stream()
+                .map(p -> new ProductoMineView(
+                        p.getId(),
+                        p.getNombre(),
+                        p.getDescripcion(),
+                        p.getImagenUrl(),
+                        p.getPrecio(),
+                        p.getStock(),
+                        p.getEstado(),
+                        p.getCategoria(),
+                        p.getEstadoPublicacion(),
+                        p.getFechaPublicacion()
+                ))
+                .collect(Collectors.toList());
+    }
+
+
 }

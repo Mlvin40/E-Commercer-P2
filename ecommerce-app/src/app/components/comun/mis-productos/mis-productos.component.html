@@ -1,1 +1,88 @@
-<p>mis-productos works!</p>
+<!-- components/comun/mis-productos/mis-productos.component.html -->
+<div *ngIf="cargando">Cargando…</div>
+<div *ngIf="error" class="text-danger">{{ error }}</div>
+<div *ngIf="exito" class="text-success">{{ exito }}</div>
+
+<table class="table align-middle" *ngIf="!cargando && items.length">
+  <thead>
+    <tr>
+      <th>Producto</th><th>Precio</th><th>Stock</th><th>Estado pub.</th><th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let p of items">
+      <td>
+        <div class="d-flex align-items-center gap-2">
+          <img *ngIf="p.imagenUrl" [src]="p.imagenUrl" style="width:48px;height:48px;object-fit:cover" class="rounded">
+          <div>
+            <div class="fw-semibold">{{ p.nombre }}</div>
+            <div class="text-muted small">{{ p.categoria }}</div>
+          </div>
+        </div>
+      </td>
+      <td>Q {{ p.precio | number:'1.2-2' }}</td>
+      <td>{{ p.stock }}</td>
+      <td>
+        <span class="badge"
+              [class.text-bg-secondary]="p.estadoPublicacion==='PENDIENTE'"
+              [class.text-bg-success]="p.estadoPublicacion==='APROBADO'"
+              [class.text-bg-danger]="p.estadoPublicacion==='RECHAZADO'">
+          {{ p.estadoPublicacion }}
+        </span>
+      </td>
+      <td class="text-end">
+        <button class="btn btn-sm btn-outline-primary me-2" (click)="empezarEditar(p)">Editar</button>
+        <button class="btn btn-sm btn-outline-danger" (click)="eliminar(p.id)">Eliminar</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div *ngIf="!cargando && !items.length" class="text-muted">Aún no tienes productos.</div>
+
+<!-- Modal/area de edición simple -->
+<div *ngIf="edit" class="card mt-3">
+  <div class="card-body">
+    <h6 class="mb-3">Editar producto</h6>
+    <form #f="ngForm" (ngSubmit)="guardar(f)" class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">Nombre</label>
+        <input class="form-control" name="nombre" [(ngModel)]="edit.nombre" required maxlength="120">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Imagen (URL)</label>
+        <input class="form-control" name="imagenUrl" [(ngModel)]="edit.imagenUrl">
+      </div>
+      <div class="col-12">
+        <label class="form-label">Descripción</label>
+        <textarea class="form-control" rows="3" name="descripcion" [(ngModel)]="edit.descripcion"></textarea>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Precio</label>
+        <input type="number" min="0.01" step="0.01" class="form-control" name="precio" [(ngModel)]="edit.precio" required>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Stock</label>
+        <input type="number" min="1" class="form-control" name="stock" [(ngModel)]="edit.stock" required>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Estado</label>
+        <select class="form-select" name="estado" [(ngModel)]="edit.estado" required>
+          <option *ngFor="let e of estados" [value]="e">{{ e }}</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Categoría</label>
+        <select class="form-select" name="categoria" [(ngModel)]="edit.categoria" required>
+          <option *ngFor="let c of categorias" [value]="c">{{ c }}</option>
+        </select>
+      </div>
+
+      <div class="col-12 d-flex gap-2">
+        <button class="btn btn-primary">Guardar</button>
+        <button type="button" class="btn btn-outline-secondary" (click)="cancelarEditar()">Cancelar</button>
+        <div class="small text-muted align-self-center ms-auto">* Al guardar, pasa a revisión</div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -31,7 +31,7 @@ public class SecurityConfig {
                         // auth público
                         .requestMatchers(HttpMethod.POST, "/api/auth/register", "/api/auth/login").permitAll()
                         // catálogo público, etc.
-                        .requestMatchers("/api/public/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/public/**").permitAll()
 
                         .requestMatchers(HttpMethod.GET, "/files/**").permitAll()        // ver imágenes
                         .requestMatchers(HttpMethod.POST, "/api/files/upload").authenticated() // subir requiere login
