@@ -29,7 +29,7 @@ public class CatalogoPrivadoController {
             @RequestParam(required=false) String categoria,
             @RequestParam(required=false, name="q") String q
     ) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "fechaPublicacion"));
+        Pageable pageable = PageRequest.of(page, size/*, Sort.by(Sort.Direction.DESC, "fechaPublicacion")*/);
         return ResponseEntity.ok(service.listar(me.id(), categoria, q, pageable));
     }
 }

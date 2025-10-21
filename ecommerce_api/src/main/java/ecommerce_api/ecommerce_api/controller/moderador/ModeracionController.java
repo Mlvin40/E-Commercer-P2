@@ -30,7 +30,7 @@ public class ModeracionController {
     public ResponseEntity<?> aprobar(@AuthenticationPrincipal AppPrincipal me,
                                      @PathVariable Long productoId) {
         service.aprobar(me.id(), productoId);
-        return ResponseEntity.noContent().build(); // 204
+        return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasRole('MODERADOR')")
@@ -39,6 +39,16 @@ public class ModeracionController {
                                       @PathVariable Long productoId,
                                       @RequestBody(required = false) ModeracionDecisionDto body) {
         service.rechazar(me.id(), productoId, body != null ? body.comentario() : null);
-        return ResponseEntity.noContent().build(); // 204
+        return ResponseEntity.noContent().build();
+    }
+
+    // NUEVO: retirar un producto ya publicado (APROBADO) -> pasa a RECHAZADO con comentario
+    @PreAuthorize("hasRole('MODERADOR')")
+    @PostMapping("/productos/{productoId}/retirar")
+    public ResponseEntity<?> retirarPublicado(@AuthenticationPrincipal AppPrincipal me,
+                                              @PathVariable Long productoId,
+                                              @RequestBody(required = false) ModeracionDecisionDto body) {
+        service.retirarPublicado(me.id(), productoId, body != null ? body.comentario() : null);
+        return ResponseEntity.noContent().build();
     }
 }

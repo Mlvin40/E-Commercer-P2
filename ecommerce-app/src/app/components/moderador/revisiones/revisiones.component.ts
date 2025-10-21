@@ -6,11 +6,11 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   standalone: true,
-  selector: 'app-moderacion-lista',
+  selector: 'app-revisiones',
   imports: [CommonModule, FormsModule],
-  templateUrl: './moderacion-lista.component.html'
+  templateUrl: './revisiones.component.html'
 })
-export class ModeracionListaComponent implements OnInit {
+export class RevisionesComponent implements OnInit {
   items: ProductoPendienteView[] = [];
   cargando = false;
   error: string | null = null;

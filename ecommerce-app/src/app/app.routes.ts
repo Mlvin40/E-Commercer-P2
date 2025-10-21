@@ -10,12 +10,17 @@ import { AdminHomeComponent } from './components/admin/admin-home/admin-home.com
 import { ModeradorHomeComponent } from './components/moderador/moderador-home/moderador-home.component';
 import { LogisticaHomeComponent } from './components/logistica/logistica-home/logistica-home.component';
 
-// SUBVISTAS COMÚN
+// COMÚN
 import { ProductoFormComponent } from './components/comun/producto-form/producto-form.component';
 import { CatalogoComponent } from './components/comun/catalogo/catalogo.component';
 import { MisProductosComponent } from './components/comun/mis-productos/mis-productos.component';
 import { CarritoComponent } from './components/comun/carrito/carrito.component';
 import { PedidosComponent } from './components/comun/pedidos/pedidos.component';
+
+// MODERADOR
+import { RevisionesComponent } from './components/moderador/revisiones/revisiones.component';
+import { SancionesComponent } from './components/moderador/sanciones/sanciones.component';
+
 
 // (para admin/moderador/logística puedes crear luego sus subrutas)
 export const routes: Routes = [
@@ -59,8 +64,9 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     data: { role: 'MODERADOR' },
     children: [
-      // { path: 'revisiones', component: RevisionesComponent },
-      // { path: 'sanciones', component: SancionesComponent },
+       { path: '', redirectTo: 'gestionRevisiones', pathMatch: 'full' },
+       { path: 'gestionRevisiones', component: RevisionesComponent },
+       { path: 'gestionSanciones', component: SancionesComponent },
     ]
   },
 

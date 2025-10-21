@@ -5,6 +5,7 @@ import ecommerce_api.ecommerce_api.model.Producto;
 import ecommerce_api.ecommerce_api.repo.ProductoRepository;
 import ecommerce_api.ecommerce_api.service.CatalogoService;
 import ecommerce_api.ecommerce_api.service.RatingService;
+import ecommerce_api.ecommerce_api.service.SancionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ public class CatalogoController {
     private final CatalogoService service;
     private final ProductoRepository productos;
     private final RatingService ratingService;
+    private final SancionService sancionService;
 
     @GetMapping("/catalogo")
     public ResponseEntity<Page<ProductoCardView>> catalogo(
@@ -28,7 +30,7 @@ public class CatalogoController {
             @RequestParam(required=false) String categoria,
             @RequestParam(required=false, name="q") String q
     ) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "fechaPublicacion"));
+        Pageable pageable = PageRequest.of(page, size /*Sort.by(Sort.Direction.DESC, "fechaPublicacion")*/);
         return ResponseEntity.ok(service.listar(null, categoria, q, pageable)); // público
     }
 
@@ -37,6 +39,10 @@ public class CatalogoController {
         Producto p = productos.findById(id)
                 .filter(pp -> "APROBADO".equals(pp.getEstadoPublicacion()))
                 .orElseThrow(() -> new IllegalArgumentException("Producto no disponible"));
+
+        if (sancionService.tieneActiva(p.getVendedor().getId())) {
+            throw new IllegalArgumentException("Producto no disponible");
+        }
 
         var sum = ratingService.resumen(id);
         var dto = new ProductoDetalleView(

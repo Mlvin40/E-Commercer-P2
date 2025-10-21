@@ -1,0 +1,51 @@
+<div class="card p-3">
+  <h5 class="mb-3">Gestión de Sanciones</h5>
+  
+<div class="row g-2 mb-3">
+  <div class="col-sm-4">
+    <div class="input-group">
+      <input class="form-control" placeholder="Buscar vendedor..." [(ngModel)]="qVend">
+      <button class="btn btn-outline-secondary" (click)="cargarVendedores()">Buscar</button>
+    </div>
+    <select class="form-select mt-2" [(ngModel)]="usuarioId">
+      <option [ngValue]="undefined">Seleccione vendedor…</option>
+      <option *ngFor="let v of vendedores" [ngValue]="v.id">
+        {{v.nombre}} ({{v.id}}) — {{v.correo}}
+      </option>
+    </select>
+  </div>
+
+  <div class="col-sm-6">
+    <input class="form-control" placeholder="Motivo" [(ngModel)]="motivo">
+  </div>
+  <div class="col-sm-2 text-end">
+    <button class="btn btn-outline-danger w-100" (click)="crear()">Crear sanción</button>
+  </div>
+</div>
+
+
+  <div *ngIf="cargando">Cargando…</div>
+  <table *ngIf="!cargando && sanciones.length" class="table table-sm align-middle">
+    <thead><tr>
+      <th>#</th><th>Usuario</th><th>Moderador</th><th>Motivo</th><th>Fecha</th><th>Estado</th><th></th>
+    </tr></thead>
+    <tbody>
+      <tr *ngFor="let s of sanciones">
+        <td>{{s.id}}</td>
+        <td>{{s.usuarioNombre}} ({{s.usuarioId}})</td>
+        <td>{{s.moderadorNombre}} ({{s.moderadorId}})</td>
+        <td>{{s.motivo}}</td>
+        <td>{{s.fecha}}</td>
+        <td>
+          <span class="badge" [class.text-bg-danger]="s.estado==='ACTIVA'" [class.text-bg-secondary]="s.estado==='LEVANTADA'">
+            {{s.estado}}
+          </span>
+        </td>
+        <td class="text-end">
+          <button *ngIf="s.estado==='ACTIVA'" class="btn btn-sm btn-outline-secondary" (click)="levantar(s.id)">Levantar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="!cargando && !sanciones.length" class="text-muted">Sin resultados.</div>
+</div>

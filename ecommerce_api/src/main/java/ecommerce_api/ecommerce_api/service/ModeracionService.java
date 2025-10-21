@@ -44,7 +44,6 @@ public class ModeracionService {
         Usuario mod = usuarios.findById(moderadorId)
                 .orElseThrow(() -> new IllegalArgumentException("Moderador no encontrado"));
 
-        // Permite MODERADOR o ADMIN
         if (!("MODERADOR".equals(mod.getRol().name()) || "ADMIN".equals(mod.getRol().name()))) {
             throw new IllegalStateException("No autorizado");
         }
@@ -52,7 +51,6 @@ public class ModeracionService {
         Producto p = productos.findById(productoId)
                 .orElseThrow(() -> new IllegalArgumentException("Producto no existe"));
 
-        // Cierra la revisión PENDIENTE de ese producto
         ProductoRevision rev = revisiones
                 .findFirstByProducto_IdAndEstadoOrderByCreadoEnAsc(productoId, "PENDIENTE")
                 .orElseThrow(() -> new IllegalArgumentException("No hay revisión pendiente para este producto."));
@@ -62,10 +60,10 @@ public class ModeracionService {
         rev.setResueltoEn(Instant.now());
         revisiones.save(rev);
 
-        // Actualiza estado_publicacion en productos
         p.setEstadoPublicacion("APROBADO");
         productos.save(p);
     }
+
     @Transactional
     public void rechazar(Long moderadorId, Long productoId, String comentario) {
         Usuario mod = usuarios.findById(moderadorId)
@@ -88,6 +86,44 @@ public class ModeracionService {
         rev.setResueltoEn(Instant.now());
         revisiones.save(rev);
 
+        p.setEstadoPublicacion("RECHAZADO");
+        productos.save(p);
+    }
+
+    /**
+     * Retira un producto ya publicado (estado_publicacion = APROBADO) y registra
+     * el evento en el historial (producto_revision) como RECHAZADO con comentario.
+     */
+    @Transactional
+    public void retirarPublicado(Long moderadorId, Long productoId, String comentario) {
+        Usuario mod = usuarios.findById(moderadorId)
+                .orElseThrow(() -> new IllegalArgumentException("Moderador no encontrado"));
+
+        if (!("MODERADOR".equals(mod.getRol().name()) || "ADMIN".equals(mod.getRol().name()))) {
+            throw new IllegalStateException("No autorizado");
+        }
+
+        Producto p = productos.findById(productoId)
+                .orElseThrow(() -> new IllegalArgumentException("Producto no existe"));
+
+        if (!"APROBADO".equals(p.getEstadoPublicacion())) {
+            throw new IllegalStateException("Solo se pueden retirar productos publicados (APROBADO).");
+        }
+
+        // Registrar historial de retiro
+        ProductoRevision rev = new ProductoRevision();
+        rev.setProducto(p);
+        rev.setSolicitadoPor(p.getVendedor()); // o el moderador, según tu modelo
+        rev.setEstado("RECHAZADO");
+        rev.setModerador(mod);
+        rev.setComentario((comentario == null || comentario.isBlank())
+                ? "Retirado por moderación"
+                : comentario);
+        rev.setCreadoEn(Instant.now());
+        rev.setResueltoEn(Instant.now());
+        revisiones.save(rev);
+
+        // Cambiar visibilidad
         p.setEstadoPublicacion("RECHAZADO");
         productos.save(p);
     }

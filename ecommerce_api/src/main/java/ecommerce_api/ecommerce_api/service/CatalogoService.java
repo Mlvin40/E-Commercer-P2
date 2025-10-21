@@ -1,3 +1,4 @@
+// src/main/java/ecommerce_api/ecommerce_api/service/CatalogoService.java
 package ecommerce_api.ecommerce_api.service;
 
 import ecommerce_api.ecommerce_api.dto.ProductoCardView;
@@ -9,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-// CatalogoService.java
 @Service
 @RequiredArgsConstructor
 public class CatalogoService {
@@ -18,30 +18,10 @@ public class CatalogoService {
 
     @Transactional(readOnly = true)
     public Page<ProductoCardView> listar(Long meId, String categoria, String q, Pageable pageable) {
-        final String APROBADO = "APROBADO";
-        Page<Producto> page;
+        String cat = (categoria == null || categoria.isBlank()) ? null : categoria.trim().toUpperCase();
+        String qq  = (q == null || q.isBlank()) ? null : q.trim();
 
-        boolean logged = (meId != null);
-
-        if (logged) {
-            if (q != null && !q.isBlank()) {
-                page = productos.findByEstadoPublicacionAndNombreContainingIgnoreCaseAndVendedor_IdNot(
-                        APROBADO, q.trim(), meId, pageable);
-            } else if (categoria != null && !categoria.isBlank()) {
-                page = productos.findByEstadoPublicacionAndCategoriaAndVendedor_IdNot(
-                        APROBADO, categoria.trim().toUpperCase(), meId, pageable);
-            } else {
-                page = productos.findByEstadoPublicacionAndVendedor_IdNot(APROBADO, meId, pageable);
-            }
-        } else {
-            if (q != null && !q.isBlank()) {
-                page = productos.findByEstadoPublicacionAndNombreContainingIgnoreCase(APROBADO, q.trim(), pageable);
-            } else if (categoria != null && !categoria.isBlank()) {
-                page = productos.findByEstadoPublicacionAndCategoria(APROBADO, categoria.trim().toUpperCase(), pageable);
-            } else {
-                page = productos.findByEstadoPublicacion(APROBADO, pageable);
-            }
-        }
+        Page<Producto> page = productos.buscarCatalogoVisible(meId, cat, qq, pageable);
 
         return page.map(p -> {
             var s = ratings.resumen(p.getId());
@@ -53,4 +33,3 @@ public class CatalogoService {
         });
     }
 }
-

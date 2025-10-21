@@ -1,3 +1,12 @@
-<!-- moderador-home.component.html -->
-<h4>Panel de Moderación</h4>
-<app-moderacion-lista />
+<!-- comun-home.component.html -->
+<div class="container py-3">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h4 class="m-0">Panel · Moderador</h4>
+    <nav class="nav nav-pills gap-2">
+      <a class="nav-link" routerLink="gestionRevisiones" routerLinkActive="active">Gestion Revisiones</a>
+      <a class="nav-link" routerLink="gestionSanciones" routerLinkActive="active">Gestion Sanciones</a>
+    </nav>
+  </div>
+
+  <router-outlet></router-outlet>
+</div>
