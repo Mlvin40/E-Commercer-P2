@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { tap } from 'rxjs/operators';
 import { AuthResponse } from '../../entities/AuthResponse';
@@ -7,7 +8,8 @@ import { AuthResponse } from '../../entities/AuthResponse';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private base = environment.apiUrl;
-  constructor(private http: HttpClient) {}
+
+  constructor(private http: HttpClient, private router: Router) {}
 
   register(data: { nombre: string; correo: string; password: string; }) {
     return this.http.post<void>(`${this.base}/auth/register`, data);
@@ -22,9 +24,11 @@ export class AuthService {
     );
   }
 
-  logout() {
+  // redirige al portal de login al cerrar sesión
+  logout(redirectTo: string = '/login') {
     localStorage.removeItem('access');
     localStorage.removeItem('refresh');
+    this.router.navigateByUrl(redirectTo, { replaceUrl: true });
   }
 
   get isLoggedIn(): boolean { return !!localStorage.getItem('access'); }

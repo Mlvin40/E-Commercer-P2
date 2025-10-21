@@ -2,7 +2,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AdminReportesService, TopClienteFeeRow } from '../../../services/admin-reportes/admin-reportes.service';
+import { AdminReportesService, TopVendedorGananciaRow } from '../../../services/admin-reportes/admin-reportes.service';
 import { finalize } from 'rxjs/operators';
 
 @Component({
@@ -14,18 +14,18 @@ import { finalize } from 'rxjs/operators';
 export class TopClientesGananciaComponent {
   desde = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().slice(0,10);
   hasta = new Date().toISOString().slice(0,10);
-  limit = 5;
+  top = 5;
 
   loading = false;
   error: string | null = null;
 
-  rows: TopClienteFeeRow[] = [];
+  rows: TopVendedorGananciaRow[] = [];
 
   constructor(private api: AdminReportesService) {}
 
   buscar() {
     this.loading = true; this.error = null;
-    this.api.topClientesFee(this.desde, this.hasta, this.limit)
+    this.api.topVendedoresGanancia(this.desde, this.hasta, this.top)
       .pipe(finalize(()=> this.loading = false))
       .subscribe({
         next: r => this.rows = r,

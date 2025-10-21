@@ -1,8 +1,13 @@
-<header class="bg-dark text-white p-3 mb-3">
-    <div class="container">
-        <h2 class="m-0">Panel - Administrador</h2>
+<header class="bg-dark text-white py-2 mb-3">
+  <div class="container d-flex align-items-center">
+    <h2 class="h5 m-0">Panel - Administrador</h2>
+
+    <div class="ms-auto">
+      <app-logout-button redirectTo="/login"></app-logout-button>
     </div>
+  </div>
 </header>
+
 
 <div class="container py-3">
     <div class="d-flex align-items-center justify-content-between mb-3">
@@ -11,6 +16,7 @@
             <a class="nav-link" routerLink="registroUsuario" routerLinkActive="active">Registrar Usuario</a>
             <a class="nav-link" routerLink="productosMasVendidos" routerLinkActive="active">10 Productos MásVendidos</a>
             <a class="nav-link" routerLink="topClientesGanancia" routerLinkActive="active">5 Top Clientes Ganancia</a>
+
             <a class="nav-link" routerLink="topClientesVentas" routerLinkActive="active">5 Top Clientes Ventas</a>
             <a class="nav-link" routerLink="topClientesPedidos" routerLinkActive="active">10 Top Clientes Pedidos</a>
             <a class="nav-link" routerLink="clientesProductosVenta" routerLinkActive="active">10 TopClientes ProductosVenta</a>

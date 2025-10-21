@@ -4,11 +4,12 @@ import { LogisticaService, Page, PedidoRow } from '../../../services/logistica/l
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
+import { LogoutButtonComponent } from '../../portal/logout-button/logout-button.component';
 
 @Component({
   selector: 'app-logistica-home',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LogoutButtonComponent],
   templateUrl: './logistica-home.component.html',
   styleUrls: ['./logistica-home.component.scss']
 })

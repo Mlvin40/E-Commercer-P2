@@ -1,1 +1,49 @@
-<p>top-clientes-ventas works!</p>
+<div class="card p-3">
+  <h5 class="mb-3">Top {{top}} clientes por productos vendidos</h5>
+
+  <div class="row g-2 align-items-end">
+    <div class="col-md-3">
+      <label class="form-label">Desde</label>
+      <input type="date" class="form-control" [(ngModel)]="desde" />
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Hasta</label>
+      <input type="date" class="form-control" [(ngModel)]="hasta" />
+    </div>
+    <div class="col-md-2">
+      <label class="form-label">Top</label>
+      <input type="number" min="1" class="form-control" [(ngModel)]="top" />
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-primary w-100" (click)="buscar()">Buscar</button>
+    </div>
+  </div>
+
+  <div class="mt-3" *ngIf="loading">Cargando…</div>
+  <div class="text-danger mt-3" *ngIf="error">{{ error }}</div>
+
+  <table class="table mt-3" *ngIf="rows.length">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Cliente (vendedor)</th>
+        <th>Correo</th>
+        <th class="text-end">Unidades vendidas</th>
+        <th class="text-end">Pedidos</th>
+        <th class="text-end">Ventas brutas (Q)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let r of rows; index as i">
+        <td>{{ i+1 }}</td>
+        <td>{{ r.nombre }}</td>
+        <td>{{ r.correo }}</td>
+        <td class="text-end">{{ r.unidadesVendidas | number }}</td>
+        <td class="text-end">{{ r.pedidos | number }}</td>
+        <td class="text-end">{{ r.ventasBrutas | number:'1.2-2' }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="text-muted mt-3" *ngIf="!loading && !rows.length">Sin datos en el rango.</div>
+</div>
