@@ -1,1 +1,23 @@
-<p>admin-home works!</p>
+<header class="bg-dark text-white p-3 mb-3">
+    <div class="container">
+        <h2 class="m-0">Panel - Administrador</h2>
+    </div>
+</header>
+
+<div class="container py-3">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <nav class="nav nav-pills gap-2">
+        
+            <a class="nav-link" routerLink="registroUsuario" routerLinkActive="active">Registrar Usuario</a>
+            <a class="nav-link" routerLink="productosMasVendidos" routerLinkActive="active">10 Productos MásVendidos</a>
+            <a class="nav-link" routerLink="topClientesGanancia" routerLinkActive="active">5 Top Clientes Ganancia</a>
+            <a class="nav-link" routerLink="topClientesVentas" routerLinkActive="active">5 Top Clientes Ventas</a>
+            <a class="nav-link" routerLink="topClientesPedidos" routerLinkActive="active">10 Top Clientes Pedidos</a>
+            <a class="nav-link" routerLink="clientesProductosVenta" routerLinkActive="active">10 TopClientes ProductosVenta</a>
+            <a class="nav-link" routerLink="historialSanciones" routerLinkActive="active">Historial Sanciones</a>
+            <a class="nav-link" routerLink="historialNotificaciones" routerLinkActive="active">Historial Notificaciones</a>
+
+        </nav>
+    </div>
+    <router-outlet></router-outlet>
+</div>

@@ -21,9 +21,17 @@ import { PedidosComponent } from './components/comun/pedidos/pedidos.component';
 import { RevisionesComponent } from './components/moderador/revisiones/revisiones.component';
 import { SancionesComponent } from './components/moderador/sanciones/sanciones.component';
 
+// ADMIN
+import { HistorialNotificacionesComponent } from './components/admin/historial-notificaciones/historial-notificaciones.component';
+import { ProductosMasVendidosComponent } from './components/admin/productos-mas-vendidos/productos-mas-vendidos.component';
+import { TopClientesGananciaComponent } from './components/admin/top-clientes-ganancia/top-clientes-ganancia.component';
+import { TopClientesVentasComponent } from './components/admin/top-clientes-ventas/top-clientes-ventas.component';
+import { ClientesProductosVentaComponent } from './components/admin/clientes-productos-venta/clientes-productos-venta.component';
+import { HistorialSancionesComponent } from './components/admin/historial-sanciones/historial-sanciones.component';
+import { RegistroUsuarioComponent } from './components/admin/registro-usuario/registro-usuario.component';
+import { TopClientesPedidosComponent } from './components/admin/top-clientes-pedidos/top-clientes-pedidos.component';
 
 
-// (para admin/moderador/logística puedes crear luego sus subrutas)
 export const routes: Routes = [
   { path: 'inicio', component: InicioComponent },
   { path: 'login', component: LoginComponent },
@@ -46,15 +54,20 @@ export const routes: Routes = [
     ]
   },
 
-  // ADMIN (placeholder)
   {
     path: 'adminHome',
     component: AdminHomeComponent,
     canActivate: [AuthGuard],
     data: { role: 'ADMIN' },
     children: [
-      // { path: 'usuarios', component: AdminUsuariosComponent },
-      // { path: 'reportes', component: AdminReportesComponent },
+      { path: 'historialNotificaciones', component: HistorialNotificacionesComponent },
+      { path: 'productosMasVendidos', component: ProductosMasVendidosComponent },
+      { path: 'topClientesGanancia', component: TopClientesGananciaComponent },
+      { path: 'topClientesVentas', component: TopClientesVentasComponent },
+      { path: 'clientesProductosVenta', component: ClientesProductosVentaComponent },
+      { path: 'historialSanciones', component: HistorialSancionesComponent },
+      { path: 'registroUsuario', component: RegistroUsuarioComponent },
+      { path: 'topClientesPedidos', component: TopClientesPedidosComponent },
     ]
   },
 
@@ -65,9 +78,9 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     data: { role: 'MODERADOR' },
     children: [
-       { path: '', redirectTo: 'gestionRevisiones', pathMatch: 'full' },
-       { path: 'gestionRevisiones', component: RevisionesComponent },
-       { path: 'gestionSanciones', component: SancionesComponent },
+      { path: '', redirectTo: 'gestionRevisiones', pathMatch: 'full' },
+      { path: 'gestionRevisiones', component: RevisionesComponent },
+      { path: 'gestionSanciones', component: SancionesComponent },
     ]
   },
 
@@ -78,7 +91,7 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     data: { role: 'LOGISTICA' },
     children: [
-       { path: 'logisticaHome', component: LogisticaHomeComponent },
+      { path: 'logisticaHome', component: LogisticaHomeComponent },
     ]
   },
 

@@ -83,7 +83,6 @@ public class ProductoService {
             throw new IllegalArgumentException("No puedes modificar este producto");
         }
 
-        // Validaciones básicas reutilizando tu lógica
         if (dto.nombre() == null || dto.nombre().isBlank())
             throw new IllegalArgumentException("El nombre es obligatorio");
         if (dto.precio() == null || dto.precio().doubleValue() <= 0)
@@ -95,17 +94,24 @@ public class ProductoService {
 
         p.setNombre(dto.nombre().trim());
         p.setDescripcion(dto.descripcion());
-        p.setImagenUrl(dto.imagenUrl());
+
+        // <- SOLO si recibimos una nueva URL (por upload), la aplicamos
+        if (dto.imagenUrl() != null && !dto.imagenUrl().isBlank()) {
+            p.setImagenUrl(dto.imagenUrl().trim());
+        }
+
         p.setPrecio(dto.precio());
         p.setStock(dto.stock());
         p.setEstado(dto.estado().trim().toUpperCase());
         p.setCategoria(dto.categoria().trim().toUpperCase());
 
-        // cada actualización entra a revisión:
+        // Entra a revisión cada actualización
         p.setEstadoPublicacion("PENDIENTE");
+        // p.setFechaPublicacion(Instant.now()); // opcional si quieres “subirlo” en listados
+
         productos.save(p);
 
-        // crear nueva fila de revisión pendiente si no existe una pendiente
+        // Crea registro de revisión pendiente si no hay uno ya
         if (!revisiones.existsByProductoAndEstado(p, "PENDIENTE")) {
             var rev = ProductoRevision.builder()
                     .producto(p)
@@ -116,6 +122,7 @@ public class ProductoService {
             revisiones.save(rev);
         }
     }
+
 
     @Transactional
     public void eliminar(Long vendedorId, Long productoId) {

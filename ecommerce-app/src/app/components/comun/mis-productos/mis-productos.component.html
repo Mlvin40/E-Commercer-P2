@@ -40,7 +40,8 @@
 
 <div *ngIf="!cargando && !items.length" class="text-muted">Aún no tienes productos.</div>
 
-<!-- Modal/area de edición simple -->
+
+<!-- Modal AArea de edición simple -->
 <div *ngIf="edit" class="card mt-3">
   <div class="card-body">
     <h6 class="mb-3">Editar producto</h6>
@@ -49,10 +50,26 @@
         <label class="form-label">Nombre</label>
         <input class="form-control" name="nombre" [(ngModel)]="edit.nombre" required maxlength="120">
       </div>
+
+      <!-- IMAGEN: ahora archivo + muestra actual -->
       <div class="col-md-6">
-        <label class="form-label">Imagen (URL)</label>
-        <input class="form-control" name="imagenUrl" [(ngModel)]="edit.imagenUrl">
+        <input type="file"
+               accept="image/*"
+               class="form-control"
+               (change)="onFileSelected($event)" />
+
+        <div class="d-flex gap-3 mt-2">
+          <div *ngIf="edit.imagenUrl">
+            <div class="small text-muted">Actual</div>
+            <img [src]="edit.imagenUrl" class="img-thumbnail" style="max-height: 120px;">
+          </div>
+          <div *ngIf="previewUrl">
+            <div class="small text-muted">Nueva</div>
+            <img [src]="previewUrl" class="img-thumbnail" style="max-height: 120px;">
+          </div>
+        </div>
       </div>
+
       <div class="col-12">
         <label class="form-label">Descripción</label>
         <textarea class="form-control" rows="3" name="descripcion" [(ngModel)]="edit.descripcion"></textarea>
@@ -86,3 +103,4 @@
     </form>
   </div>
 </div>
+

@@ -1,0 +1,246 @@
+/* Paleta base */
+$bg: #0b1220;
+$card: #121a2b;
+$muted: #98a2b3;
+$line: rgba(255,255,255,0.08);
+$text: #e5e7eb;
+$accent: #3b82f6;
+$shadow: 0 8px 24px rgba(0,0,0,0.35);
+
+/* Contenedor */
+.container {
+  max-width: 1100px;
+  margin: 24px auto;
+  padding: 0 16px;
+  color: $text;
+
+  h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 0 16px;
+    letter-spacing: .2px;
+  }
+}
+
+/* Card / formulario */
+.card {
+  background: $card;
+  border: 1px solid $line;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: $shadow;
+  margin-bottom: 16px;
+
+  legend {
+    padding: 0 8px;
+    font-weight: 600;
+    color: $muted;
+  }
+
+  .form {
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+
+      label {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        span {
+          font-size: 12px;
+          color: $muted;
+        }
+
+        input, select {
+          background: #0e1626;
+          border: 1px solid $line;
+          color: $text;
+          padding: 10px 12px;
+          border-radius: 10px;
+          outline: none;
+
+          &:focus {
+            border-color: rgba($accent, .5);
+            box-shadow: 0 0 0 3px rgba($accent, .15);
+          }
+        }
+      }
+    }
+
+    .actions {
+      margin-top: 12px;
+      display: flex;
+      justify-content: flex-end;
+
+      button {
+        padding: 10px 14px;
+        border-radius: 10px;
+        border: 1px solid transparent;
+        background: $accent;
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+
+        &:disabled {
+          opacity: .6;
+          cursor: default;
+        }
+      }
+    }
+  }
+}
+
+/* Toolbar de búsqueda */
+.toolbar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 12px 0 16px;
+
+  input[type="search"] {
+    flex: 1;
+    background: #0e1626;
+    border: 1px solid $line;
+    color: $text;
+    padding: 10px 12px;
+    border-radius: 10px;
+
+    &:focus {
+      border-color: rgba($accent, .5);
+      box-shadow: 0 0 0 3px rgba($accent, .15);
+      outline: none;
+    }
+  }
+
+  button {
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid $line;
+    background: #0e1626;
+    color: $text;
+    cursor: pointer;
+
+    &:hover {
+      background: #131d30;
+    }
+  }
+}
+
+/* Tabla */
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: $card;
+  border: 1px solid $line;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: $shadow;
+
+  th, td {
+    text-align: left;
+    padding: 12px 14px;
+    border-bottom: 1px solid $line;
+    vertical-align: middle;
+  }
+
+  thead th {
+    font-size: 12px;
+    color: $muted;
+    background: #0f1829;
+  }
+
+  tbody tr:hover {
+    background: rgba(255,255,255,0.02);
+  }
+
+  input, select {
+    width: 100%;
+    background: #0e1626;
+    border: 1px solid $line;
+    color: $text;
+    padding: 8px 10px;
+    border-radius: 8px;
+
+    &:focus {
+      border-color: rgba($accent, .5);
+      box-shadow: 0 0 0 3px rgba($accent, .15);
+      outline: none;
+    }
+  }
+
+  button {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid $line;
+    background: #0e1626;
+    color: $text;
+    cursor: pointer;
+
+    &:hover { background: #131d30; }
+
+    &.ghost {
+      background: transparent;
+      border-color: $line;
+    }
+  }
+
+  .muted { color: $muted; }
+}
+
+/* Badges de rol */
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid $line;
+  background: #0e1626;
+}
+
+.badge-admin     { color: #fca5a5; border-color: rgba(252,165,165,.3); }
+.badge-moderador { color: #93c5fd; border-color: rgba(147,197,253,.3); }
+.badge-logistica { color: #86efac; border-color: rgba(134,239,172,.3); }
+
+/* Paginación */
+.pager {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 12px;
+
+  button {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid $line;
+    background: #0e1626;
+    color: $text;
+    cursor: pointer;
+
+    &:disabled { opacity: .6; cursor: default; }
+    &:not(:disabled):hover { background: #131d30; }
+  }
+}
+
+/* Estados */
+.loading,
+.empty {
+  padding: 16px;
+  color: $muted;
+}
+
+/* Responsive */
+@media (max-width: 920px) {
+  .card .form .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 600px) {
+  .card .form .grid {
+    grid-template-columns: 1fr;
+  }
+}

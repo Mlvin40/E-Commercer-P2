@@ -1,0 +1,124 @@
+<div class="container">
+  <h2>Administración — Empleados</h2>
+
+  <!-- Registro -->
+  <fieldset class="card">
+    <legend>Registrar nuevo empleado</legend>
+    <form (ngSubmit)="crear()" class="form">
+      <div class="grid">
+        <label>
+          <span>Nombre</span>
+          <input type="text" [(ngModel)]="nuevo.nombre" name="nombre" required />
+        </label>
+        <label>
+          <span>Correo</span>
+          <input type="email" [(ngModel)]="nuevo.correo" name="correo" required />
+        </label>
+        <label>
+          <span>Password</span>
+          <input type="password" [(ngModel)]="nuevo.password" name="password" required minlength="6" />
+        </label>
+        <label>
+          <span>Rol</span>
+          <select [(ngModel)]="nuevo.rol" name="rol" required>
+            <option *ngFor="let r of roles" [ngValue]="r">{{ r }}</option>
+          </select>
+        </label>
+      </div>
+      <div class="actions">
+        <button type="submit" [disabled]="creando">Crear</button>
+      </div>
+    </form>
+  </fieldset>
+
+  <!-- Búsqueda -->
+  <div class="toolbar">
+    <input
+      type="search"
+      placeholder="Buscar por nombre o correo…"
+      [(ngModel)]="q"
+      (keyup.enter)="load(0)"
+    />
+    <button (click)="load(0)">Buscar</button>
+  </div>
+
+  <!-- Lista -->
+  <div *ngIf="loading" class="loading">Cargando…</div>
+
+  <table *ngIf="page && page.content.length" class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre (editable)</th>
+        <th>Correo (editable)</th>
+        <th>Rol</th>
+        <th>Activo</th>
+        <th>Nueva contraseña</th>
+        <th>Creado</th>
+        <th>Guardar</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let u of page!.content; trackBy: trackById">
+        <td class="muted">#{{ u.id }}</td>
+
+        <td>
+          <input
+            type="text"
+            [ngModel]="(edit[u.id]?.nombre ?? u.nombre)"
+            (ngModelChange)="setEdit(u.id, 'nombre', $event)"
+          />
+        </td>
+
+        <td>
+          <input
+            type="email"
+            [ngModel]="(edit[u.id]?.correo ?? u.correo)"
+            (ngModelChange)="setEdit(u.id, 'correo', $event)"
+          />
+        </td>
+
+        <!-- Rol (solo lectura) -->
+        <td>
+          <span class="badge" [ngClass]="roleClass(u.rol)">{{ u.rol }}</span>
+        </td>
+
+        <td>
+          <button class="ghost" (click)="toggleActivo(u)" [disabled]="savingId===u.id">
+            {{ u.activo ? 'Desactivar' : 'Activar' }}
+          </button>
+        </td>
+
+        <td>
+          <input
+            type="password"
+            placeholder="(opcional)"
+            [ngModel]="edit[u.id]?.password ?? ''"
+            (ngModelChange)="setEdit(u.id, 'password', $event)"
+            
+          />
+        </td>
+
+        <td class="muted">{{ u.fechaCreacion | date:'short' }}</td>
+
+        <td>
+          <button
+            (click)="guardar(u)"
+            [disabled]="savingId===u.id || !tieneCambios(u)"
+          >
+            Guardar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="page && !page.content.length" class="empty">No hay empleados.</div>
+
+  <!-- Paginación -->
+  <div *ngIf="page && page.totalPages>1" class="pager">
+    <button (click)="go(page.number-1)" [disabled]="page.number===0">Anterior</button>
+    <span>Página {{page.number+1}} / {{page.totalPages}}</span>
+    <button (click)="go(page.number+1)" [disabled]="page.number+1>=page.totalPages">Siguiente</button>
+  </div>
+</div>
