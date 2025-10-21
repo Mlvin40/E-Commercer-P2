@@ -22,6 +22,7 @@ import { RevisionesComponent } from './components/moderador/revisiones/revisione
 import { SancionesComponent } from './components/moderador/sanciones/sanciones.component';
 
 
+
 // (para admin/moderador/logística puedes crear luego sus subrutas)
 export const routes: Routes = [
   { path: 'inicio', component: InicioComponent },
@@ -45,7 +46,7 @@ export const routes: Routes = [
     ]
   },
 
-  // ADMIN (placeholder, luego agregas children)
+  // ADMIN (placeholder)
   {
     path: 'adminHome',
     component: AdminHomeComponent,
@@ -77,10 +78,10 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     data: { role: 'LOGISTICA' },
     children: [
-      // { path: 'pedidos', component: LogisticaPedidosComponent },
+       { path: 'logisticaHome', component: LogisticaHomeComponent },
     ]
   },
 
-  // 404 opcional
+  // 404 para los demás casos
   { path: '**', redirectTo: 'inicio' }
 ];

@@ -1,1 +1,47 @@
-<p>logistica-home works!</p>
+<div class="container">
+  <h2>Logística — Pedidos en curso</h2>
+
+  <div *ngIf="loading">Cargando...</div>
+
+  <table *ngIf="page && page.content.length" class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Comprador</th>
+        <th>Items</th>
+        <th>Total</th>
+        <th>Pedido</th>
+        <th>Entrega (estimada)</th>
+        <th>Reprogramar</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of page!.content">
+        <td>#{{p.id}}</td>
+        <td>{{p.comprador}}</td>
+        <td>{{p.items}}</td>
+        <td>{{p.total | currency:'USD'}}</td>
+        <td>{{p.fechaPedido || '—'}}</td>
+        <td><strong>{{p.fechaEstimadaEntrega}}</strong></td>
+        <td>
+          <input type="date"
+                 [ngModel]="selected[p.id] || p.fechaEstimadaEntrega"
+                 (ngModelChange)="selected[p.id]=$event">
+          <button (click)="reprogramar(p)" [disabled]="savingId===p.id">Guardar</button>
+        </td>
+        <td>
+          <button (click)="entregar(p)" [disabled]="savingId===p.id">Marcar ENTREGADO</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="page && !page.content.length">No hay pedidos en curso.</div>
+
+  <div *ngIf="page && page.totalPages>1" class="pager">
+    <button (click)="load(page.number-1)" [disabled]="page.number===0">Anterior</button>
+    <span>Página {{page.number+1}} / {{page.totalPages}}</span>
+    <button (click)="load(page.number+1)" [disabled]="page.number+1>=page.totalPages">Siguiente</button>
+  </div>
+</div>
