@@ -123,7 +123,6 @@ public class ProductoService {
         }
     }
 
-
     @Transactional
     public void eliminar(Long vendedorId, Long productoId) {
         var p = productos.findById(productoId)
