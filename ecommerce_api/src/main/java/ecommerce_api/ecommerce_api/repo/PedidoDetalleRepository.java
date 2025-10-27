@@ -7,12 +7,28 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
+/**
+ * The interface Pedido detalle repository.
+ */
 public interface PedidoDetalleRepository extends JpaRepository<PedidoDetalle, Long> {
 
+    /**
+     * User bought product boolean.
+     *
+     * @param userId     the user id
+     * @param productoId the producto id
+     * @return the boolean
+     */
     @Query("select count(pd) > 0 from PedidoDetalle pd " +
             "where pd.pedido.usuario.id = :u and pd.producto.id = :p")
     boolean userBoughtProduct(@Param("u") Long userId, @Param("p") Long productoId);
 
-    // para el rating
+    /**
+     * Find by pedido id list.
+     *
+     * @param pedidoId the pedido id
+     * @return the list
+     */
+// para el rating
     List<PedidoDetalle> findByPedido_Id(Long pedidoId);
 }

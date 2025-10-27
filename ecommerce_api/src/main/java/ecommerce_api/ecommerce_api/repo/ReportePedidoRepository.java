@@ -9,8 +9,19 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * The interface Reporte pedido repository.
+ */
 public interface ReportePedidoRepository extends JpaRepository<Pedido, Long> {
 
+    /**
+     * Top clientes por pedidos list.
+     *
+     * @param desde          the desde
+     * @param hastaExclusivo the hasta exclusivo
+     * @param pageable       the pageable
+     * @return the list
+     */
     @Query("""
         select new ecommerce_api.ecommerce_api.dto.reportes.TopClientePedidosRow(
             u.id, u.nombre, u.correo,

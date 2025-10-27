@@ -15,6 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * The type Rating service.
+ */
 @Service @RequiredArgsConstructor
 public class RatingService {
 
@@ -22,6 +25,12 @@ public class RatingService {
     private final CalificacionRepository calificaciones;
     private final ProductoRepository productos;
 
+    /**
+     * Calificar.
+     *
+     * @param userId the user id
+     * @param dto    the dto
+     */
     @Transactional
     public void calificar(Long userId, RatingCreateDto dto) {
         if (dto.estrellas() == null || dto.estrellas() < 1 || dto.estrellas() > 5)
@@ -44,6 +53,12 @@ public class RatingService {
         calificaciones.save(c);
     }
 
+    /**
+     * Resumen rating summary dto.
+     *
+     * @param productoId the producto id
+     * @return the rating summary dto
+     */
     @Transactional(readOnly = true)
     public RatingSummaryDto resumen(Long productoId) {
         return new RatingSummaryDto(
@@ -52,6 +67,12 @@ public class RatingService {
         );
     }
 
+    /**
+     * Listar comentarios list.
+     *
+     * @param productoId the producto id
+     * @return the list
+     */
     @Transactional(readOnly = true)
     public List<CalificacionView> listarComentarios(Long productoId) {
         return calificaciones.findViewsByProductoId(productoId);

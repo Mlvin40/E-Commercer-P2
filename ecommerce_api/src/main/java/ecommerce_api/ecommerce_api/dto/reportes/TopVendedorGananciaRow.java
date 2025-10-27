@@ -2,6 +2,9 @@ package ecommerce_api.ecommerce_api.dto.reportes;
 
 import java.math.BigDecimal;
 
+/**
+ * The type Top vendedor ganancia row.
+ */
 public record TopVendedorGananciaRow(
         Long vendedorId,
         String nombre,

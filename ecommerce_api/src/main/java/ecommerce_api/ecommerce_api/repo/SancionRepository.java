@@ -11,8 +11,18 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * The interface Sancion repository.
+ */
 public interface SancionRepository extends JpaRepository<Sancion, Long> {
 
+    /**
+     * Buscar list.
+     *
+     * @param usuarioId the usuario id
+     * @param estado    the estado
+     * @return the list
+     */
     @Query("""
         select s from Sancion s
         join fetch s.usuario u
@@ -24,11 +34,27 @@ public interface SancionRepository extends JpaRepository<Sancion, Long> {
     List<Sancion> buscar(@Param("usuarioId") Long usuarioId,
                          @Param("estado") String estado);
 
+    /**
+     * Existe activa para boolean.
+     *
+     * @param usuarioId the usuario id
+     * @return the boolean
+     */
     @Query("select count(s) > 0 from Sancion s where s.usuario.id = :usuarioId and s.estado = 'ACTIVA'")
     boolean existeActivaPara(@Param("usuarioId") Long usuarioId);
 
 
-    //para el reporte de sanciones
+    /**
+     * Historial page.
+     *
+     * @param estado         the estado
+     * @param desde          the desde
+     * @param hastaExclusivo the hasta exclusivo
+     * @param qLike          the q like
+     * @param pageable       the pageable
+     * @return the page
+     */
+//para el reporte de sanciones
     @Query(
             value = """
     select new ecommerce_api.ecommerce_api.dto.reportes.SancionHistRow(

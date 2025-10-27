@@ -7,8 +7,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
 import java.util.List;
 
+/**
+ * The interface Reporte producto repository.
+ */
 public interface ReporteProductoRepository extends JpaRepository<Producto, Long> {
 
+    /**
+     * Top clientes con mas productos en venta list.
+     *
+     * @param pageable the pageable
+     * @return the list
+     */
     @Query("""
         select new ecommerce_api.ecommerce_api.dto.reportes.TopClienteProductosVentaRow(
             u.id, u.nombre, u.correo,

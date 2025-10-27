@@ -11,6 +11,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.net.URI;
 import java.util.Map;
 
+/**
+ * The type Upload controller.
+ */
 @RestController
 @RequestMapping("/api/files")
 @RequiredArgsConstructor
@@ -18,16 +21,24 @@ public class UploadController {
 
     private final FileStorageService storage;
 
+    /**
+     * Upload response entity.
+     *
+     * @param file    the file
+     * @param request the request
+     * @return the response entity
+     * @throws Exception the exception
+     */
     @PostMapping("/upload")
     public ResponseEntity<?> upload(@RequestParam("file") MultipartFile file,
                                     HttpServletRequest request) throws Exception {
-        // 1) Guardar y obtener ruta relativa (p. ej. "/files/uuid.png")
+        // Guardar y obtener ruta relativa
         String relativeUrl = storage.saveImage(file);
 
-        // 2) Construir URL absoluta según la solicitud actual
+        // Construir URL absoluta según la solicitud actual
         String absoluteUrl = ServletUriComponentsBuilder
-                .fromRequestUri(request)      // http://host:port/api/files/upload
-                .replacePath(relativeUrl)     // -> http://host:port/files/uuid.png
+                .fromRequestUri(request)      // Esto toma el esquema, host, puerto y ruta actual
+                .replacePath(relativeUrl)     // Establece la nueva ruta
                 .build()
                 .toUriString();
 

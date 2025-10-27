@@ -14,6 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.util.List;
 
+/**
+ * The type Moderacion service.
+ */
 @Service
 @RequiredArgsConstructor
 public class ModeracionService {
@@ -22,6 +25,11 @@ public class ModeracionService {
     private final ProductoRevisionRepository revisiones;
     private final UsuarioRepository usuarios;
 
+    /**
+     * Listar pendientes list.
+     *
+     * @return the list
+     */
     @Transactional(readOnly = true)
     public List<ProductoPendienteView> listarPendientes() {
         return revisiones.findByEstadoOrderByCreadoEnAsc("PENDIENTE")
@@ -39,6 +47,12 @@ public class ModeracionService {
                 .toList();
     }
 
+    /**
+     * Aprobar.
+     *
+     * @param moderadorId the moderador id
+     * @param productoId  the producto id
+     */
     @Transactional
     public void aprobar(Long moderadorId, Long productoId) {
         Usuario mod = usuarios.findById(moderadorId)
@@ -64,6 +78,13 @@ public class ModeracionService {
         productos.save(p);
     }
 
+    /**
+     * Rechazar.
+     *
+     * @param moderadorId the moderador id
+     * @param productoId  the producto id
+     * @param comentario  the comentario
+     */
     @Transactional
     public void rechazar(Long moderadorId, Long productoId, String comentario) {
         Usuario mod = usuarios.findById(moderadorId)
@@ -93,6 +114,10 @@ public class ModeracionService {
     /**
      * Retira un producto ya publicado (estado_publicacion = APROBADO) y registra
      * el evento en el historial (producto_revision) como RECHAZADO con comentario.
+     *
+     * @param moderadorId the moderador id
+     * @param productoId  the producto id
+     * @param comentario  the comentario
      */
     @Transactional
     public void retirarPublicado(Long moderadorId, Long productoId, String comentario) {
@@ -113,7 +138,7 @@ public class ModeracionService {
         // Registrar historial de retiro
         ProductoRevision rev = new ProductoRevision();
         rev.setProducto(p);
-        rev.setSolicitadoPor(p.getVendedor()); // o el moderador, según tu modelo
+        rev.setSolicitadoPor(p.getVendedor()); // quien creó el producto
         rev.setEstado("RECHAZADO");
         rev.setModerador(mod);
         rev.setComentario((comentario == null || comentario.isBlank())

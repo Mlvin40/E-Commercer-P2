@@ -5,6 +5,9 @@ import lombok.*;
 
 import java.math.BigDecimal;
 
+/**
+ * The type Pedido detalle.
+ */
 @Entity @Table(name = "pedido_detalle")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public class PedidoDetalle {

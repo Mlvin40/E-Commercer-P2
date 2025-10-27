@@ -1,8 +1,23 @@
 package ecommerce_api.ecommerce_api.model;
 
-public enum Role { 
-    COMUN, 
-    MODERADOR, 
-    LOGISTICA, 
-    ADMIN 
+/**
+ * The enum Role.
+ */
+public enum Role {
+    /**
+     * Comun role.
+     */
+    COMUN,
+    /**
+     * Moderador role.
+     */
+    MODERADOR,
+    /**
+     * Logistica role.
+     */
+    LOGISTICA,
+    /**
+     * Admin role.
+     */
+    ADMIN
 }

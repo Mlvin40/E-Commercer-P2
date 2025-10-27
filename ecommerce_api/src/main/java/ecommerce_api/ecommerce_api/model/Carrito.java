@@ -7,6 +7,9 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Carrito.
+ */
 @Entity @Table(name = "carritos")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public class Carrito {

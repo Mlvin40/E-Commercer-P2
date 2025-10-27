@@ -2,6 +2,9 @@ package ecommerce_api.ecommerce_api.dto.reportes;
 
 import java.time.LocalDate;
 
+/**
+ * The type Sancion hist row.
+ */
 public record SancionHistRow(
         Long id,
         Long moderadorId,

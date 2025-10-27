@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * The type Catalogo controller.
+ */
 @RestController
 @RequestMapping("/api/public")
 @RequiredArgsConstructor
@@ -23,6 +26,15 @@ public class CatalogoController {
     private final RatingService ratingService;
     private final SancionService sancionService;
 
+    /**
+     * Catalogo response entity.
+     *
+     * @param page      the page
+     * @param size      the size
+     * @param categoria the categoria
+     * @param q         the q
+     * @return the response entity
+     */
     @GetMapping("/catalogo")
     public ResponseEntity<Page<ProductoCardView>> catalogo(
             @RequestParam(defaultValue="0") int page,
@@ -34,6 +46,12 @@ public class CatalogoController {
         return ResponseEntity.ok(service.listar(null, categoria, q, pageable)); // público
     }
 
+    /**
+     * Detalle response entity.
+     *
+     * @param id the id
+     * @return the response entity
+     */
     @GetMapping("/productos/{id}")
     public ResponseEntity<ProductoDetalleView> detalle(@PathVariable Long id) {
         Producto p = productos.findById(id)
@@ -54,6 +72,12 @@ public class CatalogoController {
         return ResponseEntity.ok(dto);
     }
 
+    /**
+     * Comentarios response entity.
+     *
+     * @param id the id
+     * @return the response entity
+     */
     @GetMapping("/productos/{id}/comentarios")
     public ResponseEntity<List<CalificacionView>> comentarios(@PathVariable Long id) {
         return ResponseEntity.ok(ratingService.listarComentarios(id));

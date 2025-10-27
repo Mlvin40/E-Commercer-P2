@@ -18,6 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ * The type Carrito service.
+ */
 @Service @RequiredArgsConstructor
 public class CarritoService {
 
@@ -26,6 +29,14 @@ public class CarritoService {
     private final ProductoRepository productos;
     private final UsuarioRepository usuarios;
 
+    /**
+     * Add item carrito view dto.
+     *
+     * @param userId     the user id
+     * @param productoId the producto id
+     * @param cantidad   the cantidad
+     * @return the carrito view dto
+     */
     @Transactional
     public CarritoViewDto addItem(Long userId, Long productoId, int cantidad) {
         if (cantidad < 1) throw new IllegalArgumentException("Cantidad inválida");
@@ -54,6 +65,14 @@ public class CarritoService {
         return view(userId);
     }
 
+    /**
+     * Update qty carrito view dto.
+     *
+     * @param userId     the user id
+     * @param productoId the producto id
+     * @param cantidad   the cantidad
+     * @return the carrito view dto
+     */
     @Transactional
     public CarritoViewDto updateQty(Long userId, Long productoId, int cantidad) {
         if (cantidad < 1) throw new IllegalArgumentException("Cantidad inválida");
@@ -65,6 +84,13 @@ public class CarritoService {
         return view(userId);
     }
 
+    /**
+     * Remove item carrito view dto.
+     *
+     * @param userId     the user id
+     * @param productoId the producto id
+     * @return the carrito view dto
+     */
     @Transactional
     public CarritoViewDto removeItem(Long userId, Long productoId) {
         Carrito carrito = carritos.findByUsuario_Id(userId).orElseThrow();
@@ -73,6 +99,11 @@ public class CarritoService {
         return view(userId);
     }
 
+    /**
+     * Clear.
+     *
+     * @param userId the user id
+     */
     @Transactional
     public void clear(Long userId) {
         Carrito carrito = carritos.findByUsuario_Id(userId).orElseThrow();
@@ -80,6 +111,12 @@ public class CarritoService {
         detalles.deleteAll(list);
     }
 
+    /**
+     * View carrito view dto.
+     *
+     * @param userId the user id
+     * @return the carrito view dto
+     */
     @Transactional(readOnly = true)
     public CarritoViewDto view(Long userId) {
         Carrito carrito = carritos.findByUsuario_Id(userId).orElse(null);

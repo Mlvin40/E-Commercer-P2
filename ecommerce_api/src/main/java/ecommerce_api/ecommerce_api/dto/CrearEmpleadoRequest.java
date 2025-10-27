@@ -4,6 +4,9 @@ import ecommerce_api.ecommerce_api.model.Role;
 import jakarta.validation.constraints.*;
 
 
+/**
+ * The type Crear empleado request.
+ */
 public record CrearEmpleadoRequest(
         @NotBlank String nombre,
         @NotBlank @Email String correo,

@@ -15,12 +15,22 @@ import org.springframework.web.cors.*;
 
 import java.util.List;
 
+/**
+ * The type Security config.
+ */
 @Configuration
-@EnableMethodSecurity // <- habilita @PreAuthorize en servicios/controladores
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
 
+    /**
+     * Filter chain security filter chain.
+     *
+     * @param http the http
+     * @return the security filter chain
+     * @throws Exception the exception
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -30,7 +40,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // auth público
                         .requestMatchers(HttpMethod.POST, "/api/auth/register", "/api/auth/login").permitAll()
-                        // catálogo público, etc.
+                        // catálogo público
                         .requestMatchers(HttpMethod.GET,"/api/public/**").permitAll()
 
                         .requestMatchers(HttpMethod.GET, "/files/**").permitAll()        // ver imágenes
@@ -52,13 +62,23 @@ public class SecurityConfig {
         return http.build();
     }
 
+    /**
+     * Password encoder password encoder.
+     *
+     * @return the password encoder
+     */
     @Bean
     public PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
 
+    /**
+     * Cors configuration source cors configuration source.
+     *
+     * @return the cors configuration source
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration cfg = new CorsConfiguration();
-        // Para dev y despliegue (Netlify + ngrok)
+        // Para despliegue en Netlify, ngrok, localhost:4200 (Angular dev server)
         cfg.setAllowedOriginPatterns(List.of(
                 "http://localhost:4200",
                 "https://*.netlify.app",

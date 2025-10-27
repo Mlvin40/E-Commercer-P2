@@ -3,6 +3,9 @@ package ecommerce_api.ecommerce_api.dto;
 import java.math.BigDecimal;
 import java.time.Instant;
 
+/**
+ * The type Producto mine view.
+ */
 public record ProductoMineView(
         Long id,
         String nombre,

@@ -1,4 +1,3 @@
-// src/main/java/ecommerce_api/ecommerce_api/model/Tarjeta.java
 package ecommerce_api.ecommerce_api.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -7,6 +6,9 @@ import lombok.*;
 
 import java.time.Instant;
 
+/**
+ * The type Tarjeta.
+ */
 @Entity @Table(name = "tarjetas")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public class Tarjeta {
@@ -15,7 +17,7 @@ public class Tarjeta {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id", nullable = false)
-    @JsonIgnore // <- evita tocar LAZY al serializar por accidente
+    @JsonIgnore // Evita ciclos infinitos en serialización JSON
     private Usuario usuario;
 
     @Column(nullable = false, length = 120)

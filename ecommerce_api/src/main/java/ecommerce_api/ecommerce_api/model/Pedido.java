@@ -8,6 +8,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Pedido.
+ */
 @Entity @Table(name = "pedidos")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public class Pedido {
@@ -22,7 +25,7 @@ public class Pedido {
     private BigDecimal total;
 
     @Column(nullable = false, length = 10)
-    private String estado; // EN_CURSO | ENTREGADO
+    private String estado; //EN_CURSO, ENTREGADO
 
     @Column(name = "fecha_pedido")
     private LocalDate fechaPedido;

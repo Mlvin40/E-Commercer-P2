@@ -4,7 +4,10 @@ import lombok.*;
 
 import java.time.LocalDate;
 
-// model/Sancion.java
+/**
+ * The type Sancion.
+ */
+
 @Entity @Table(name = "sanciones")
 @Getter @Setter
 public class Sancion {

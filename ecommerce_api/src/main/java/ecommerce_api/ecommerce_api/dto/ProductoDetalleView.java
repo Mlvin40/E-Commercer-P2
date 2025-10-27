@@ -2,6 +2,9 @@ package ecommerce_api.ecommerce_api.dto;
 
 import java.math.BigDecimal;
 
+/**
+ * The type Producto detalle view.
+ */
 public record ProductoDetalleView(
         Long id,
         String nombre,

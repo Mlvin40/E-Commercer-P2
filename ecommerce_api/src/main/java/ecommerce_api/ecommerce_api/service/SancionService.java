@@ -12,6 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * The type Sancion service.
+ */
 @Service
 @RequiredArgsConstructor
 public class SancionService {
@@ -19,6 +22,14 @@ public class SancionService {
     private final SancionRepository repo;
     private final UsuarioRepository usuarios;
 
+    /**
+     * Crear long.
+     *
+     * @param moderadorId the moderador id
+     * @param usuarioId   the usuario id
+     * @param motivo      the motivo
+     * @return the long
+     */
     @Transactional
     public Long crear(Long moderadorId, Long usuarioId, String motivo) {
         Usuario mod = usuarios.findById(moderadorId).orElseThrow();
@@ -33,6 +44,11 @@ public class SancionService {
         return s.getId();
     }
 
+    /**
+     * Levantar.
+     *
+     * @param sancionId the sancion id
+     */
     @Transactional
     public void levantar(Long sancionId) {
         Sancion s = repo.findById(sancionId).orElseThrow();
@@ -40,11 +56,24 @@ public class SancionService {
         repo.save(s);
     }
 
+    /**
+     * Tiene activa boolean.
+     *
+     * @param usuarioId the usuario id
+     * @return the boolean
+     */
     @Transactional(readOnly = true)
     public boolean tieneActiva(Long usuarioId) {
         return repo.existeActivaPara(usuarioId);
     }
 
+    /**
+     * Listar list.
+     *
+     * @param usuarioId the usuario id
+     * @param estado    the estado
+     * @return the list
+     */
     @Transactional(readOnly = true)
     public List<SancionView> listar(Long usuarioId, String estado) {
         return repo.buscar(usuarioId, estado).stream().map(s -> new SancionView(

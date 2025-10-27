@@ -1,4 +1,3 @@
-// src/main/java/ecommerce_api/ecommerce_api/repo/ReportePedidoDetalleRepository.java
 package ecommerce_api.ecommerce_api.repo;
 
 import ecommerce_api.ecommerce_api.dto.reportes.TopClienteGananciaRow;
@@ -13,8 +12,19 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * The interface Reporte pedido detalle repository.
+ */
 public interface ReportePedidoDetalleRepository extends JpaRepository<PedidoDetalle, Long> {
 
+    /**
+     * Top productos mas vendidos list.
+     *
+     * @param desde          the desde
+     * @param hastaExclusivo the hasta exclusivo
+     * @param pageable       the pageable
+     * @return the list
+     */
     @Query("""
         select new ecommerce_api.ecommerce_api.dto.reportes.TopProductoRow(
             p.id, p.nombre,
@@ -35,7 +45,15 @@ public interface ReportePedidoDetalleRepository extends JpaRepository<PedidoDeta
             Pageable pageable
     );
 
-    // NUEVO: top vendedores por ganancia (sum(ganancia_vendedor))
+    /**
+     * Top vendedores ganancia list.
+     *
+     * @param desde          the desde
+     * @param hastaExclusivo the hasta exclusivo
+     * @param pageable       the pageable
+     * @return the list
+     */
+    // top vendedores por ganancia (sum(ganancia_vendedor))
     @Query("""
         select new ecommerce_api.ecommerce_api.dto.reportes.TopVendedorGananciaRow(
             v.id, v.nombre, v.correo,
@@ -59,6 +77,14 @@ public interface ReportePedidoDetalleRepository extends JpaRepository<PedidoDeta
     );
 
 
+    /**
+     * Top clientes ganancia sitio list.
+     *
+     * @param desde          the desde
+     * @param hastaExclusivo the hasta exclusivo
+     * @param pageable       the pageable
+     * @return the list
+     */
     @Query("""
     select new ecommerce_api.ecommerce_api.dto.reportes.TopClienteGananciaRow(
         u.id, u.nombre, u.correo,
@@ -81,7 +107,15 @@ public interface ReportePedidoDetalleRepository extends JpaRepository<PedidoDeta
     );
 
 
-    //Top por **unidades vendidas** en el periodo
+    /**
+     * Top vendedores unidades list.
+     *
+     * @param desde          the desde
+     * @param hastaExclusivo the hasta exclusivo
+     * @param pageable       the pageable
+     * @return the list
+     */
+    // top vendedores por unidades vendidas.
     @Query("""
         select new ecommerce_api.ecommerce_api.dto.reportes.TopVendedorUnidadesRow(
             v.id, v.nombre, v.correo,

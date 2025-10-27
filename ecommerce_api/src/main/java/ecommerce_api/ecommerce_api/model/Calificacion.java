@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.Instant;
 
+/**
+ * The type Calificacion.
+ */
 @Entity @Table(name = "calificaciones",
         uniqueConstraints = @UniqueConstraint(columnNames = {"usuario_id","producto_id"}))
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor

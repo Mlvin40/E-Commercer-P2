@@ -2,6 +2,9 @@ package ecommerce_api.ecommerce_api.dto;
 
 import java.time.LocalDate;
 
+/**
+ * The type Sancion view.
+ */
 public record SancionView(
         Long id,
         Long usuarioId,

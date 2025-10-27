@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * The type Usuarios moderador controller.
+ */
 @RestController
 @RequestMapping("/api/moderador/usuarios")
 @RequiredArgsConstructor
@@ -20,6 +23,14 @@ public class UsuariosModeradorController {
 
     private final UsuarioRepository usuarios;
 
+    /**
+     * Vendedores list.
+     *
+     * @param q    the q
+     * @param page the page
+     * @param size the size
+     * @return the list
+     */
     @GetMapping("/vendedores")
     public List<UsuarioLiteView> vendedores(@RequestParam(required = false) String q,
                                             @RequestParam(defaultValue = "0") int page,

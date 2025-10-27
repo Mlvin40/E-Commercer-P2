@@ -15,12 +15,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * The type Catalogo privado controller.
+ */
 @RestController
 @RequestMapping("/api/comun/catalogo")
 @RequiredArgsConstructor
 public class CatalogoPrivadoController {
     private final CatalogoService service;
 
+    /**
+     * Catalogo logueado response entity.
+     *
+     * @param me        the me
+     * @param page      the page
+     * @param size      the size
+     * @param categoria the categoria
+     * @param q         the q
+     * @return the response entity
+     */
     @GetMapping
     public ResponseEntity<Page<ProductoCardView>> catalogoLogueado(
             @AuthenticationPrincipal AppPrincipal me,

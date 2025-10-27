@@ -6,6 +6,9 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import java.time.Instant;
 
+/**
+ * The type Usuario.
+ */
 @Entity
 @Table(name = "usuarios", uniqueConstraints = @UniqueConstraint(columnNames = "correo"))
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder

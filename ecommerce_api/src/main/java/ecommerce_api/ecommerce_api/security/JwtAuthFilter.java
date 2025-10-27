@@ -16,12 +16,20 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * The type Jwt auth filter.
+ */
 @Component
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtService jwt;
 
+    // Este metodo lo que hace es interceptar cada solicitud HTTP entrante
+    // y buscar un token JWT en el encabezado Authorization.
+    // Si encuentra un token válido, extrae la información del usuario
+    // y establece el contexto de seguridad para que la aplicación
+    // reconozca al usuario autenticado.
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
             throws ServletException, IOException {
@@ -33,8 +41,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 Claims claims = jwt.parse(token).getBody();
 
                 String correo = claims.getSubject();               // sub = correo
-                String role   = claims.get("role", String.class);  // "COMUN", "ADMIN", etc.
-                Number uidNum = claims.get("uid", Number.class);   // viene del AuthService
+                String role   = claims.get("role", String.class);  // "Rol".
+                Number uidNum = claims.get("uid", Number.class);   // Viene del AuthService
                 Long uid = uidNum != null ? uidNum.longValue() : null;
 
                 var principal = new AppPrincipal(uid, correo, role);

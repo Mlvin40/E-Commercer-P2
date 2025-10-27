@@ -11,11 +11,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
-@Service @RequiredArgsConstructor
+/**
+ * The type Checkout service.
+ */
+@Service
+@RequiredArgsConstructor
 public class CheckoutService {
 
     private final CarritoRepository carritos;
@@ -26,10 +31,18 @@ public class CheckoutService {
     private final TarjetaRepository tarjetas;
     private final PagoRepository pagos;
 
+    /**
+     * Pagar checkout response.
+     *
+     * @param userId the user id
+     * @param req    the req
+     * @return the checkout response
+     */
+
+    // Este metodo simula el proceso de pago y creación de pedido
     @Transactional
     public CheckoutResponse pagar(Long userId, CheckoutRequest req) {
-        Carrito carrito = carritos.findByUsuario_Id(userId)
-                .orElseThrow(() -> new IllegalStateException("Carrito vacío"));
+        Carrito carrito = carritos.findByUsuario_Id(userId).orElseThrow(() -> new IllegalStateException("Carrito vacío"));
         List<CarritoDetalle> items = detalles.findByCarrito_Id(carrito.getId());
         if (items.isEmpty()) throw new IllegalStateException("Carrito vacío");
 
@@ -37,17 +50,17 @@ public class CheckoutService {
             Producto p = d.getProducto();
             if (!"APROBADO".equals(p.getEstadoPublicacion()))
                 throw new IllegalArgumentException("Producto no disponible: " + p.getNombre());
-            if (d.getCantidad() > p.getStock())
-                throw new IllegalArgumentException("Sin stock para: " + p.getNombre());
+            if (d.getCantidad() > p.getStock()) throw new IllegalArgumentException("Sin stock para: " + p.getNombre());
         }
 
-        String token; String last4; String marca = "VISA";
+        String token;
+        String last4; // últimos 4 dígitos
+        String marca = "VISA";
         if (req.savedCardId() != null) {
-            Tarjeta t = tarjetas.findById(req.savedCardId())
-                    .orElseThrow(() -> new IllegalArgumentException("Tarjeta inválida"));
-            if (!t.getUsuario().getId().equals(userId))
-                throw new IllegalArgumentException("Tarjeta inválida");
-            token = t.getToken(); last4 = t.getLast4();
+            Tarjeta t = tarjetas.findById(req.savedCardId()).orElseThrow(() -> new IllegalArgumentException("Tarjeta inválida"));
+            if (!t.getUsuario().getId().equals(userId)) throw new IllegalArgumentException("Tarjeta inválida");
+            token = t.getToken();
+            last4 = t.getLast4();
         } else {
             if (req.numero() == null || req.numero().length() < 12)
                 throw new IllegalArgumentException("Tarjeta inválida");
@@ -63,21 +76,20 @@ public class CheckoutService {
         Pedido pedido = new Pedido();
         pedido.setUsuario(u);
         pedido.setEstado("EN_CURSO");
-        pedido.setFechaPedido(java.time.LocalDate.now());
-        pedido.setFechaEstimadaEntrega(java.time.LocalDate.now().plusDays(5));
-        pedido.setTotal(java.math.BigDecimal.ZERO);
+        pedido.setFechaPedido(LocalDate.now());
+        pedido.setFechaEstimadaEntrega(LocalDate.now().plusDays(5));
+        pedido.setTotal(BigDecimal.ZERO);
         pedido = pedidos.save(pedido);
 
-        java.math.BigDecimal total = java.math.BigDecimal.ZERO;
+        BigDecimal total = BigDecimal.ZERO;
 
         for (CarritoDetalle d : items) {
             Producto p = d.getProducto();
             int qty = d.getCantidad();
-            java.math.BigDecimal unit = p.getPrecio();
-            java.math.BigDecimal subtotal = unit.multiply(java.math.BigDecimal.valueOf(qty));
-            java.math.BigDecimal fee = subtotal.multiply(new java.math.BigDecimal("0.05"))
-                    .setScale(2, java.math.RoundingMode.HALF_UP);
-            java.math.BigDecimal sellerGain = subtotal.subtract(fee);
+            BigDecimal unit = p.getPrecio();
+            BigDecimal subtotal = unit.multiply(BigDecimal.valueOf(qty));
+            BigDecimal fee = subtotal.multiply(new BigDecimal("0.05")).setScale(2, RoundingMode.HALF_UP);
+            BigDecimal sellerGain = subtotal.subtract(fee);
 
             PedidoDetalle pd = new PedidoDetalle();
             pd.setPedido(pedido);
@@ -99,7 +111,7 @@ public class CheckoutService {
         pedido.setTotal(total);
         pedidos.save(pedido);
 
-        // Guardar tarjeta (si aplica) usando la MISMA referencia 'u'
+        // Guardar tarjeta usando. la MISMA referencia 'u'
         if (Boolean.TRUE.equals(req.guardar()) && req.savedCardId() == null) {
             Tarjeta t = new Tarjeta();
             t.setUsuario(u);
@@ -115,7 +127,7 @@ public class CheckoutService {
         pago.setPedido(pedido);
         pago.setMonto(total);
         pago.setEstado("APROBADO");
-        pago.setProveedorTxId("mock_" + java.util.UUID.randomUUID());
+        pago.setProveedorTxId("mock_" + UUID.randomUUID()); // Esto sería el ID de la transacción del proveedor real
         pagos.save(pago);
 
         detalles.deleteAll(items);
@@ -123,17 +135,14 @@ public class CheckoutService {
         return new CheckoutResponse(pedido.getId(), total, "APROBADO");
     }
 
+    /**
+     * Listar tarjetas list.
+     *
+     * @param userId the user id
+     * @return the list
+     */
     @Transactional(readOnly = true)
     public List<TarjetaView> listarTarjetas(Long userId) {
-        return tarjetas.findByUsuario_IdOrderByFechaRegistroDesc(userId)
-                .stream()
-                .map(t -> new TarjetaView(
-                        t.getId(),
-                        t.getLast4(),
-                        t.getMarca(),
-                        t.getTitular(),
-                        Boolean.TRUE.equals(t.getPredeterminada())
-                ))
-                .toList();
+        return tarjetas.findByUsuario_IdOrderByFechaRegistroDesc(userId).stream().map(t -> new TarjetaView(t.getId(), t.getLast4(), t.getMarca(), t.getTitular(), Boolean.TRUE.equals(t.getPredeterminada()))).toList();
     }
 }

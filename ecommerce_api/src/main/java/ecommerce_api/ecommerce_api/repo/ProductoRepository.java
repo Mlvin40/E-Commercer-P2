@@ -10,36 +10,103 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
+/**
+ * The interface Producto repository.
+ */
 public interface ProductoRepository extends JpaRepository<Producto, Long> {
 
+    /**
+     * Find by estado publicacion page.
+     *
+     * @param estadoPublicacion the estado publicacion
+     * @param pageable          the pageable
+     * @return the page
+     */
     @EntityGraph(attributePaths = "vendedor")
     Page<Producto> findByEstadoPublicacion(String estadoPublicacion, Pageable pageable);
 
+    /**
+     * Find by estado publicacion and categoria page.
+     *
+     * @param estadoPublicacion the estado publicacion
+     * @param categoria         the categoria
+     * @param pageable          the pageable
+     * @return the page
+     */
     @EntityGraph(attributePaths = "vendedor")
     Page<Producto> findByEstadoPublicacionAndCategoria(
             String estadoPublicacion, String categoria, Pageable pageable);
 
+    /**
+     * Find by estado publicacion and nombre containing ignore case page.
+     *
+     * @param estadoPublicacion the estado publicacion
+     * @param q                 the q
+     * @param pageable          the pageable
+     * @return the page
+     */
     @EntityGraph(attributePaths = "vendedor")
     Page<Producto> findByEstadoPublicacionAndNombreContainingIgnoreCase(
             String estadoPublicacion, String q, Pageable pageable);
 
-    // si usas el catálogo privado (excluir mis productos)
+    /**
+     * Find by estado publicacion and vendedor id not page.
+     *
+     * @param estadoPublicacion the estado publicacion
+     * @param vendedorId        the vendedor id
+     * @param pageable          the pageable
+     * @return the page
+     */
+// si usas el catálogo privado (excluir mis productos)
     @EntityGraph(attributePaths = "vendedor")
     Page<Producto> findByEstadoPublicacionAndVendedor_IdNot(
             String estadoPublicacion, Long vendedorId, Pageable pageable);
 
+    /**
+     * Find by estado publicacion and categoria and vendedor id not page.
+     *
+     * @param estadoPublicacion the estado publicacion
+     * @param categoria         the categoria
+     * @param vendedorId        the vendedor id
+     * @param pageable          the pageable
+     * @return the page
+     */
     @EntityGraph(attributePaths = "vendedor")
     Page<Producto> findByEstadoPublicacionAndCategoriaAndVendedor_IdNot(
             String estadoPublicacion, String categoria, Long vendedorId, Pageable pageable);
 
+    /**
+     * Find by estado publicacion and nombre containing ignore case and vendedor id not page.
+     *
+     * @param estadoPublicacion the estado publicacion
+     * @param q                 the q
+     * @param vendedorId        the vendedor id
+     * @param pageable          the pageable
+     * @return the page
+     */
     @EntityGraph(attributePaths = "vendedor")
     Page<Producto> findByEstadoPublicacionAndNombreContainingIgnoreCaseAndVendedor_IdNot(
             String estadoPublicacion, String q, Long vendedorId, Pageable pageable);
 
 
+    /**
+     * Find by vendedor id order by fecha publicacion desc list.
+     *
+     * @param vendedorId the vendedor id
+     * @return the list
+     */
     @EntityGraph(attributePaths = "vendedor")
     List<Producto> findByVendedor_IdOrderByFechaPublicacionDesc(Long vendedorId);
 
+    /**
+     * Buscar catalogo visible page.
+     *
+     * @param excludeVendedorId the exclude vendedor id
+     * @param categoria         the categoria
+     * @param q                 the q
+     * @param pageable          the pageable
+     * @return the page
+     */
     @Query(
             value = """
     select p.*

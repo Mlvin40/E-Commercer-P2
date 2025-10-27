@@ -17,6 +17,9 @@ import java.util.stream.Collectors;
 import java.time.Instant;
 import java.util.List;
 
+/**
+ * The type Producto service.
+ */
 @Service
 @RequiredArgsConstructor
 public class ProductoService {
@@ -25,13 +28,20 @@ public class ProductoService {
     private final UsuarioRepository usuarios;
     private final ProductoRevisionRepository revisiones;
 
+    /**
+     * Crear producto.
+     *
+     * @param vendedorId the vendedor id
+     * @param dto        the dto
+     * @return the producto
+     */
     @Transactional
     public Producto crear(Long vendedorId, ProductoUpsertDto dto) {
-        // 0) Dueño
+        // Dueño
         Usuario vendedor = usuarios.findById(vendedorId)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
 
-        // 1) Validaciones
+        // Validaciones
         if (dto.nombre() == null || dto.nombre().isBlank())
             throw new IllegalArgumentException("El nombre es obligatorio");
         if (dto.precio() == null || dto.precio().doubleValue() <= 0)
@@ -44,7 +54,7 @@ public class ProductoService {
         String estado = dto.estado().trim().toUpperCase();
         String categoria = dto.categoria().trim().toUpperCase();
 
-        // 2) Insert producto
+        // Insert producto
         Producto p = Producto.builder()
                 .nombre(dto.nombre().trim())
                 .descripcion(dto.descripcion())
@@ -60,7 +70,7 @@ public class ProductoService {
 
         p = productos.save(p);
 
-        // 3) Insert revisión PENDIENTE (evita duplicados pend.)
+        // Insert revisión PENDIENTE automática
         if (!revisiones.existsByProductoAndEstado(p, "PENDIENTE")) {
             var rev = ProductoRevision.builder()
                     .producto(p)
@@ -74,6 +84,13 @@ public class ProductoService {
         return p;
     }
 
+    /**
+     * Actualizar.
+     *
+     * @param vendedorId the vendedor id
+     * @param productoId the producto id
+     * @param dto        the dto
+     */
     @Transactional
     public void actualizar(Long vendedorId, Long productoId, ProductoUpsertDto dto) {
         var p = productos.findById(productoId)
@@ -95,7 +112,7 @@ public class ProductoService {
         p.setNombre(dto.nombre().trim());
         p.setDescripcion(dto.descripcion());
 
-        // <- SOLO si recibimos una nueva URL (por upload), la aplicamos
+        // SOLO si recibimos una nueva URL (por upload), se actualiza la foto
         if (dto.imagenUrl() != null && !dto.imagenUrl().isBlank()) {
             p.setImagenUrl(dto.imagenUrl().trim());
         }
@@ -107,7 +124,7 @@ public class ProductoService {
 
         // Entra a revisión cada actualización
         p.setEstadoPublicacion("PENDIENTE");
-        // p.setFechaPublicacion(Instant.now()); // opcional si quieres “subirlo” en listados
+        // p.setFechaPublicacion(Instant.now());
 
         productos.save(p);
 
@@ -123,6 +140,12 @@ public class ProductoService {
         }
     }
 
+    /**
+     * Eliminar.
+     *
+     * @param vendedorId the vendedor id
+     * @param productoId the producto id
+     */
     @Transactional
     public void eliminar(Long vendedorId, Long productoId) {
         var p = productos.findById(productoId)
@@ -130,9 +153,16 @@ public class ProductoService {
         if (!p.getVendedor().getId().equals(vendedorId)) {
             throw new IllegalArgumentException("No puedes eliminar este producto");
         }
-        productos.delete(p); // on delete cascade eliminará revisiones
+        productos.delete(p);
+        // on delete cascade eliminará revisiones asociadas
     }
 
+    /**
+     * Listar mis productos list.
+     *
+     * @param vendedorId the vendedor id
+     * @return the list
+     */
     @Transactional(readOnly = true)
     public List<ProductoMineView> listarMisProductos(Long vendedorId) {
         return productos.findByVendedor_IdOrderByFechaPublicacionDesc(vendedorId)
@@ -151,6 +181,4 @@ public class ProductoService {
                 ))
                 .collect(Collectors.toList());
     }
-
-
 }

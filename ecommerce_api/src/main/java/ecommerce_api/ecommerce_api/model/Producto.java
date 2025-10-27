@@ -5,6 +5,9 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.Instant;
 
+/**
+ * The type Producto.
+ */
 @Entity @Table(name="productos")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class Producto {
@@ -18,11 +21,11 @@ public class Producto {
     @Column(nullable=false, precision=10, scale=2) private BigDecimal precio;
     @Column(nullable=false) private Integer stock;
 
-    @Column(nullable=false, length=10) private String estado;           // NUEVO/USADO
-    @Column(nullable=false, length=20) private String categoria;        // TECNOLOGIA...
+    @Column(nullable=false, length=10) private String estado; // NUEVO, USADO
+    @Column(nullable=false, length=20) private String categoria;
 
     @Column(name="estado_publicacion", nullable=false, length=12)
-    private String estadoPublicacion; // PENDIENTE/APROBADO/RECHAZADO
+    private String estadoPublicacion; //PENDIENTE, APROBADO, RECHAZADO
 
     @ManyToOne(fetch=FetchType.LAZY) @JoinColumn(name="usuario_id", nullable=false)
     private Usuario vendedor;

@@ -6,6 +6,9 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.Instant;
 
+/**
+ * The type Pago.
+ */
 @Entity @Table(name = "pagos")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public class Pago {
@@ -20,7 +23,7 @@ public class Pago {
     private BigDecimal monto;
 
     @Column(nullable = false, length = 10)
-    private String estado; // APROBADO | RECHAZADO
+    private String estado; //APROBADO, RECHAZADO
 
     @Column(name = "proveedor_tx_id", length = 100)
     private String proveedorTxId;

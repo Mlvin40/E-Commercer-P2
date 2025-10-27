@@ -2,6 +2,9 @@ package ecommerce_api.ecommerce_api.dto;
 
 import java.math.BigDecimal;
 
+/**
+ * The type Checkout request.
+ */
 public record CheckoutRequest(
         Long savedCardId,
         String numero,

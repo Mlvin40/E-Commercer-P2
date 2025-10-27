@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.Map;
 
+/**
+ * The type Producto controller.
+ */
 @RestController
 @RequestMapping("/api/comun/productos")
 @RequiredArgsConstructor
@@ -20,6 +23,13 @@ public class ProductoController {
 
     private final ProductoService service;
 
+    /**
+     * Crear response entity.
+     *
+     * @param me  the me
+     * @param dto the dto
+     * @return the response entity
+     */
     @PreAuthorize("hasRole('COMUN')")
     @PostMapping
     public ResponseEntity<?> crear(@AuthenticationPrincipal AppPrincipal me,

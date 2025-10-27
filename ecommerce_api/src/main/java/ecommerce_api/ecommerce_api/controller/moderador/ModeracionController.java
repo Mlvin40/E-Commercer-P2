@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * The type Moderacion controller.
+ */
 @RestController
 @RequestMapping("/api/moderador/revisiones")
 @RequiredArgsConstructor
@@ -19,12 +22,24 @@ public class ModeracionController {
 
     private final ModeracionService service;
 
+    /**
+     * Pendientes response entity.
+     *
+     * @return the response entity
+     */
     @PreAuthorize("hasRole('MODERADOR')")
     @GetMapping("/pendientes")
     public ResponseEntity<List<ProductoPendienteView>> pendientes() {
         return ResponseEntity.ok(service.listarPendientes());
     }
 
+    /**
+     * Aprobar response entity.
+     *
+     * @param me         the me
+     * @param productoId the producto id
+     * @return the response entity
+     */
     @PreAuthorize("hasRole('MODERADOR')")
     @PostMapping("/{productoId}/aprobar")
     public ResponseEntity<?> aprobar(@AuthenticationPrincipal AppPrincipal me,
@@ -33,6 +48,14 @@ public class ModeracionController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Rechazar response entity.
+     *
+     * @param me         the me
+     * @param productoId the producto id
+     * @param body       the body
+     * @return the response entity
+     */
     @PreAuthorize("hasRole('MODERADOR')")
     @PostMapping("/{productoId}/rechazar")
     public ResponseEntity<?> rechazar(@AuthenticationPrincipal AppPrincipal me,
@@ -42,7 +65,15 @@ public class ModeracionController {
         return ResponseEntity.noContent().build();
     }
 
-    // NUEVO: retirar un producto ya publicado (APROBADO) -> pasa a RECHAZADO con comentario
+    /**
+     * Retirar publicado response entity.
+     *
+     * @param me         the me
+     * @param productoId the producto id
+     * @param body       the body
+     * @return the response entity
+     */
+    // Cuando un producto ya fue aprobado y publicado, el moderador puede retirarlo
     @PreAuthorize("hasRole('MODERADOR')")
     @PostMapping("/productos/{productoId}/retirar")
     public ResponseEntity<?> retirarPublicado(@AuthenticationPrincipal AppPrincipal me,

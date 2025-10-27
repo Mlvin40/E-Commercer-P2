@@ -12,16 +12,32 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
+/**
+ * The type Logistica service.
+ */
 @Service
 @RequiredArgsConstructor
 public class LogisticaService {
     private final PedidoRepository pedidos;
 
+    /**
+     * Listar en curso page.
+     *
+     * @param pageable the pageable
+     * @return the page
+     */
     public Page<PedidoLogisticaRow> listarEnCurso(Pageable pageable) {
         return pedidos.findByEstado("EN_CURSO", pageable)
                 .map(this::toRow);
     }
 
+    /**
+     * Reprogramar fecha pedido logistica row.
+     *
+     * @param id         the id
+     * @param nuevaFecha the nueva fecha
+     * @return the pedido logistica row
+     */
     @Transactional
     public PedidoLogisticaRow reprogramarFecha(Long id, LocalDate nuevaFecha) {
         if (nuevaFecha == null) throw new IllegalArgumentException("Fecha requerida");
@@ -35,6 +51,12 @@ public class LogisticaService {
         return toRow(p);
     }
 
+    /**
+     * Marcar entregado.
+     *
+     * @param id             the id
+     * @param fechaEntregada the fecha entregada
+     */
     @Transactional
     public void marcarEntregado(Long id, LocalDate fechaEntregada) {
         Pedido p = pedidos.findByIdAndEstado(id, "EN_CURSO")

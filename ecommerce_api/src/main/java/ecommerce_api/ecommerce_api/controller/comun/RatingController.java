@@ -9,11 +9,21 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * The type Rating controller.
+ */
 @RestController @RequestMapping("/api/comun/ratings") @RequiredArgsConstructor
 public class RatingController {
 
     private final RatingService service;
 
+    /**
+     * Crear response entity.
+     *
+     * @param me  the me
+     * @param dto the dto
+     * @return the response entity
+     */
     @PostMapping
     @PreAuthorize("hasRole('COMUN')")
     public ResponseEntity<?> crear(@AuthenticationPrincipal AppPrincipal me,

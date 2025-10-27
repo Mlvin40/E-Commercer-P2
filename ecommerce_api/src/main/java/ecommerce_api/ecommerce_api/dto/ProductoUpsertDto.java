@@ -3,6 +3,9 @@ package ecommerce_api.ecommerce_api.dto;
 import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 
+/**
+ * The type Producto upsert dto.
+ */
 public record ProductoUpsertDto(
         @NotBlank String nombre,
         String descripcion,

@@ -3,6 +3,9 @@ package ecommerce_api.ecommerce_api.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * The type Carrito detalle.
+ */
 @Entity @Table(name = "carrito_detalle",
         uniqueConstraints = @UniqueConstraint(name = "uq_item_unico", columnNames = {"carrito_id","producto_id"}))
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor

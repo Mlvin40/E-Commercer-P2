@@ -9,6 +9,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * The type Mis productos controller.
+ */
 @RestController
 @RequestMapping("/api/comun/mis-productos")
 @RequiredArgsConstructor
@@ -16,12 +19,26 @@ public class MisProductosController {
 
     private final ProductoService service;
 
+    /**
+     * Listar response entity.
+     *
+     * @param me the me
+     * @return the response entity
+     */
     @PreAuthorize("hasRole('COMUN')")
     @GetMapping
     public ResponseEntity<?> listar(@AuthenticationPrincipal AppPrincipal me) {
         return ResponseEntity.ok(service.listarMisProductos(me.id()));
     }
 
+    /**
+     * Actualizar response entity.
+     *
+     * @param me  the me
+     * @param id  the id
+     * @param dto the dto
+     * @return the response entity
+     */
     @PreAuthorize("hasRole('COMUN')")
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizar(@AuthenticationPrincipal AppPrincipal me,
@@ -31,6 +48,13 @@ public class MisProductosController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Eliminar response entity.
+     *
+     * @param me the me
+     * @param id the id
+     * @return the response entity
+     */
     @PreAuthorize("hasRole('COMUN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminar(@AuthenticationPrincipal AppPrincipal me,

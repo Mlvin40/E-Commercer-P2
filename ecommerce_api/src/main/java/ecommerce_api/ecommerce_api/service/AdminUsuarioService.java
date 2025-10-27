@@ -9,12 +9,24 @@ import org.springframework.data.domain.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+/**
+ * The type Admin usuario service.
+ */
 @Service
 @RequiredArgsConstructor
 public class AdminUsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder encoder;
 
+    /**
+     * Listar page.
+     *
+     * @param q        the q
+     * @param pageable the pageable
+     * @return the page
+     */
+
+    // q es el filtro de búsqueda nombre o correo
     public Page<EmpleadoView> listar(String q, Pageable pageable) {
         var roles = java.util.List.of(
                 Role.ADMIN.name(), Role.MODERADOR.name(), Role.LOGISTICA.name()
@@ -36,6 +48,12 @@ public class AdminUsuarioService {
         );
     }
 
+    /**
+     * Crear empleado view.
+     *
+     * @param req the req
+     * @return the empleado view
+     */
     public EmpleadoView crear(CrearEmpleadoRequest req) {
         var correo = req.correo().toLowerCase().trim();
         if (usuarioRepository.existsByCorreo(correo)) {
@@ -56,6 +74,13 @@ public class AdminUsuarioService {
         return toView(u);
     }
 
+    /**
+     * Actualizar empleado view.
+     *
+     * @param id  the id
+     * @param req the req
+     * @return the empleado view
+     */
     public EmpleadoView actualizar(Long id, ActualizarEmpleadoRequest req) {
         var u = usuarioRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Empleado no encontrado."));

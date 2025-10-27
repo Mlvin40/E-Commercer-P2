@@ -7,12 +7,22 @@ import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * The type Logistica pedidos controller.
+ */
 @RestController
 @RequestMapping("/api/logistica/pedidos")
 @RequiredArgsConstructor
 public class LogisticaPedidosController {
     private final LogisticaService service;
 
+    /**
+     * Listar response entity.
+     *
+     * @param page the page
+     * @param size the size
+     * @return the response entity
+     */
     @GetMapping
     public ResponseEntity<Page<PedidoLogisticaRow>> listar(
             @RequestParam(defaultValue="0") int page,
@@ -22,6 +32,13 @@ public class LogisticaPedidosController {
         return ResponseEntity.ok(service.listarEnCurso(PageRequest.of(page, size, sort)));
     }
 
+    /**
+     * Reprogramar response entity.
+     *
+     * @param id   the id
+     * @param body the body
+     * @return the response entity
+     */
     @PatchMapping("/{id}/fecha-entrega")
     public ResponseEntity<PedidoLogisticaRow> reprogramar(
             @PathVariable Long id,
@@ -30,6 +47,13 @@ public class LogisticaPedidosController {
         return ResponseEntity.ok(service.reprogramarFecha(id, body.fechaEstimadaEntrega()));
     }
 
+    /**
+     * Entregar response entity.
+     *
+     * @param id   the id
+     * @param body the body
+     * @return the response entity
+     */
     @PostMapping("/{id}/entregar")
     public ResponseEntity<Void> entregar(
             @PathVariable Long id,

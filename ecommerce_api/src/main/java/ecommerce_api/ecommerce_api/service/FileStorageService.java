@@ -9,16 +9,32 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.util.*;
 
+/**
+ * The type File storage service.
+ */
 @Service
 public class FileStorageService {
 
     private final Path root;
 
+    /**
+     * Instantiates a new File storage service.
+     *
+     * @param uploadDir the upload dir
+     * @throws IOException the io exception
+     */
     public FileStorageService(@Value("${app.upload-dir}") String uploadDir) throws IOException {
         this.root = Path.of(uploadDir).toAbsolutePath().normalize();
         Files.createDirectories(this.root);
     }
 
+    /**
+     * Save image string.
+     *
+     * @param file the file
+     * @return the string
+     * @throws IOException the io exception
+     */
     public String saveImage(MultipartFile file) throws IOException {
         if (file.isEmpty()) throw new IllegalArgumentException("Archivo vacío.");
         // Validar content-type

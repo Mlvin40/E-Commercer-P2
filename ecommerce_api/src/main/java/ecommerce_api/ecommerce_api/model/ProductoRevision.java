@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.Instant;
 
+/**
+ * The type Producto revision.
+ */
 @Entity @Table(name = "producto_revision")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class ProductoRevision {
@@ -14,10 +17,10 @@ public class ProductoRevision {
     private Producto producto;
 
     @ManyToOne(optional = false) @JoinColumn(name = "solicitado_por")
-    private Usuario solicitadoPor; // vendedor normalmente
+    private Usuario solicitadoPor; //Vendedor normalmente
 
     @Column(nullable = false)
-    private String estado; // PENDIENTE | APROBADO | RECHAZADO
+    private String estado; // PENDIENTE, APROBADO, RECHAZADO
 
     @ManyToOne @JoinColumn(name = "moderador_id")
     private Usuario moderador;
