@@ -11,6 +11,7 @@ import ecommerce_api.ecommerce_api.repo.CarritoDetalleRepository;
 import ecommerce_api.ecommerce_api.repo.CarritoRepository;
 import ecommerce_api.ecommerce_api.repo.ProductoRepository;
 import ecommerce_api.ecommerce_api.repo.UsuarioRepository;
+import ecommerce_api.ecommerce_api.util.ImagenResource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,9 @@ public class CarritoService {
     private final CarritoDetalleRepository detalles;
     private final ProductoRepository productos;
     private final UsuarioRepository usuarios;
+
+    //Para imagen base64
+    private final ImagenResource imagenService;
 
     /**
      * Add item carrito view dto.
@@ -127,7 +131,7 @@ public class CarritoService {
                 new CarritoItemDto(
                         d.getProducto().getId(),
                         d.getProducto().getNombre(),
-                        d.getProducto().getImagenUrl(),
+                        imagenService.formatoRealImagen(d.getProducto().getImagenUrl()),
                         d.getProducto().getPrecio(),
                         d.getCantidad(),
                         d.getProducto().getStock()

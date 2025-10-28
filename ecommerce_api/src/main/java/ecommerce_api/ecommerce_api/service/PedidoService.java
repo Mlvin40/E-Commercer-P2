@@ -6,6 +6,7 @@ import ecommerce_api.ecommerce_api.model.Pedido;
 import ecommerce_api.ecommerce_api.repo.CalificacionRepository;
 import ecommerce_api.ecommerce_api.repo.PedidoDetalleRepository;
 import ecommerce_api.ecommerce_api.repo.PedidoRepository;
+import ecommerce_api.ecommerce_api.util.ImagenResource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,9 @@ public class PedidoService {
     private final PedidoRepository pedidos;
     private final PedidoDetalleRepository pedidoDetalles;
     private final CalificacionRepository calificaciones;
+
+    //Para imagen base64
+    private final ImagenResource imagenService;
 
     /**
      * Listar list.
@@ -56,7 +60,7 @@ public class PedidoService {
                 .map(d -> new PedidoItemParaRatingDto(
                         d.getProducto().getId(),
                         d.getProducto().getNombre(),
-                        d.getProducto().getImagenUrl(),
+                        imagenService.formatoRealImagen(d.getProducto().getImagenUrl()),
                         d.getCantidad(),
                         d.getPrecioUnitario(),
                         calificaciones.existsByUsuario_IdAndProducto_Id(userId, d.getProducto().getId())

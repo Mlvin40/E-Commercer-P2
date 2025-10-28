@@ -7,6 +7,7 @@ import ecommerce_api.ecommerce_api.model.Usuario;
 import ecommerce_api.ecommerce_api.repo.ProductoRepository;
 import ecommerce_api.ecommerce_api.repo.ProductoRevisionRepository;
 import ecommerce_api.ecommerce_api.repo.UsuarioRepository;
+import ecommerce_api.ecommerce_api.util.ImagenResource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,9 @@ public class ModeracionService {
     private final ProductoRevisionRepository revisiones;
     private final UsuarioRepository usuarios;
 
+    //Para imagen base64
+    private final ImagenResource imagenService;
+
     /**
      * Listar pendientes list.
      *
@@ -39,7 +43,7 @@ public class ModeracionService {
                         r.getProducto().getNombre(),
                         r.getProducto().getCategoria(),
                         r.getProducto().getEstado(),
-                        r.getProducto().getImagenUrl(),
+                        imagenService.formatoRealImagen(r.getProducto().getImagenUrl()),
                         r.getSolicitadoPor().getNombre(),
                         r.getSolicitadoPor().getCorreo(),
                         r.getCreadoEn()

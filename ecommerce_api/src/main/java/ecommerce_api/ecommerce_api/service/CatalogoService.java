@@ -4,6 +4,7 @@ package ecommerce_api.ecommerce_api.service;
 import ecommerce_api.ecommerce_api.dto.ProductoCardView;
 import ecommerce_api.ecommerce_api.model.Producto;
 import ecommerce_api.ecommerce_api.repo.ProductoRepository;
+import ecommerce_api.ecommerce_api.util.ImagenResource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class CatalogoService {
     private final ProductoRepository productos;
     private final RatingService ratings;
+
+    //Para imagen base64
+    private final ImagenResource imagenService;
 
     /**
      * Listar page.
@@ -38,7 +42,7 @@ public class CatalogoService {
         return page.map(p -> {
             var s = ratings.resumen(p.getId());
             return new ProductoCardView(
-                    p.getId(), p.getNombre(), p.getImagenUrl(), p.getPrecio(), p.getStock(), p.getCategoria(),
+                    p.getId(), p.getNombre(), imagenService.formatoRealImagen(p.getImagenUrl()), p.getPrecio(), p.getStock(), p.getCategoria(),
                     p.getVendedor().getNombre(), p.getVendedor().getCorreo(),
                     s.avg(), s.count()
             );

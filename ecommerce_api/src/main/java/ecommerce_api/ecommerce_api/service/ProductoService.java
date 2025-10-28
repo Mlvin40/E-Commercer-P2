@@ -8,6 +8,7 @@ import ecommerce_api.ecommerce_api.model.Usuario;
 import ecommerce_api.ecommerce_api.repo.ProductoRepository;
 import ecommerce_api.ecommerce_api.repo.ProductoRevisionRepository;
 import ecommerce_api.ecommerce_api.repo.UsuarioRepository;
+import ecommerce_api.ecommerce_api.util.ImagenResource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +28,9 @@ public class ProductoService {
     private final ProductoRepository productos;
     private final UsuarioRepository usuarios;
     private final ProductoRevisionRepository revisiones;
+
+    //Para imagen base64
+    private final ImagenResource imagenResource;
 
     /**
      * Crear producto.
@@ -171,7 +175,7 @@ public class ProductoService {
                         p.getId(),
                         p.getNombre(),
                         p.getDescripcion(),
-                        p.getImagenUrl(),
+                        imagenResource.formatoRealImagen(p.getImagenUrl()),
                         p.getPrecio(),
                         p.getStock(),
                         p.getEstado(),
